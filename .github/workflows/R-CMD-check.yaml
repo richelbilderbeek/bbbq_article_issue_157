@@ -16,6 +16,12 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
 
+      - name: Install libgit2-dev
+        run: sudo apt install -qq libgit2-dev
+
+      - name: Install libcurl4-openssl-dev
+        run: sudo apt install -qq libcurl4-openssl-dev
+
       - name: Install remotes package
         run: install.packages("remotes")
         shell: Rscript {0}
