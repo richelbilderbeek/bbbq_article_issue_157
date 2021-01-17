@@ -22,17 +22,17 @@ jobs:
         shell: Rscript {0}
 
       - name: get UP000005640_9606.fasta.gz
-        shell: make UP000005640_9606.fasta.gz
+        run: make UP000005640_9606.fasta.gz
 
       - name: get UP000005640_9606.fasta
-        shell: make UP000005640_9606.fasta
+        run: make UP000005640_9606.fasta
 
       - name: simplify FASTA to 2 proteins
-        shell: ./simplify_fasta.sh
+        run: ./simplify_fasta.sh
 
       - name: make
-        shell: make
+        run: make
 
       - name: show results
-        shell: cat results.csv
+        run: cat results.csv
 
