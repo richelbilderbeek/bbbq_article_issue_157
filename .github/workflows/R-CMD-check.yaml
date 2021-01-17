@@ -1,0 +1,38 @@
+# For help debugging build failures open an issue on the RStudio community with the 'github-actions' tag.
+# https://community.rstudio.com/new-topic?category=Package%20development&tags=github-actions
+on:
+  push:
+  pull_request:
+
+name: R-CMD-check
+
+jobs:
+  R-CMD-check:
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: r-lib/actions/setup-r@v1
+
+      - uses: r-lib/actions/setup-pandoc@v1
+
+      - name: Install dependencies
+        run: |
+          remotes::install_deps(dependencies = TRUE)
+          remotes::install_github("richelbilderbeek/bianchietal2017")
+        shell: Rscript {0}
+
+      - name: get UP000005640_9606.fasta.gz
+        shell: make UP000005640_9606.fasta.gz
+
+      - name: get UP000005640_9606.fasta
+        shell: make UP000005640_9606.fasta
+
+      - name: simplify FASTA to 2 proteins
+        shell: ./simplify_fasta.sh
+
+      - name: make
+        shell: make
+
+      - name: show results
+        shell: cat results.csv
+
