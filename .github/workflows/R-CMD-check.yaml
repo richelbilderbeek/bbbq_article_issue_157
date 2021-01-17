@@ -39,6 +39,10 @@ jobs:
         run: remotes::install_github("richelbilderbeek/pureseqtmr")
         shell: Rscript {0}
 
+      - name: Install PureseqTM
+        run: pureseqt:r:install_pureseqtm()
+        shell: Rscript {0}
+
       - name: Install tmhmm
         run: remotes::install_github("richelbilderbeek/tmhmm")
         shell: Rscript {0}
@@ -52,9 +56,12 @@ jobs:
       - name: simplify FASTA to 2 proteins
         run: ./simplify_fasta.sh
 
-      - name: make
-        run: make
+      - name: make matches.csv 
+        run: make matches.csv
+
+      - name: make tmhs_pureseqtm.csv
+        run: make tmhs_pureseqtm.csv
 
       - name: show results
-        run: cat results.csv
+        run: cat tmhs_pureseqtm.csv
 
