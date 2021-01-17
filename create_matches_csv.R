@@ -1,3 +1,6 @@
+# Here we look for the gene names and sequences for those epitopes that
+# have exactly 1 match:
+
 # Human reference proteome
 fasta_filename <- "UP000005640_9606.fasta"
 testthat::expect_true(file.exists(fasta_filename))
@@ -10,12 +13,6 @@ library(bianchietal2017)
 library(dplyr, warn.conflicts = FALSE)
 library(ggplot2, quietly = TRUE)
 
-if (1 == 2) {
-  setwd("~/GitHubs/bbbq_article/issue_157/")
-}
-#It is claimed that some eluates from Schellens et al., 2015,
-#are derived from TMHs.
-
 # Here we obtain the human reference proteome used:
 t_proteome <- pureseqtmr::load_fasta_file_as_tibble(fasta_filename = fasta_filename)
 # The human reference proteome contains 20600 sequences.
@@ -26,9 +23,6 @@ t_schellens <- bianchietal2017::get_schellens_et_al_2015_sup_1(xlsx_filename = x
 epitope_sequences <- unique(t_schellens$epitope_sequence)
 # There are 7897 unique epitope sequences.
 testthat::expect_equal(7897, length(epitope_sequences))
-
-# Here we look for the gene names and sequences for those epitopes that
-# have exactly 1 match:
 
 t_matches <- tibble::tibble(
   epitope_sequence = epitope_sequences,
@@ -48,5 +42,7 @@ for (i in seq_len(nrow(t_matches))) {
     t_matches$gene_name[i] <- t_proteome$name[matches]
   }
 }
-readr::write_csv(t_matches, "matches.csv")
-testthat::expect_true(file.exists("matches.csv"))
+
+matches_csv_filename <- "matches.csv"
+readr::write_csv(t_matches, matches_csv_filename)
+testthat::expect_true(file.exists(matches_csv_filename))

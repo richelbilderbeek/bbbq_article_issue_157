@@ -1,4 +1,4 @@
-all: UP000005640_9606.fasta schellens_et_al_2015_sup_1.xlsx matches.csv
+all: unique_matches_tmhmm.csv
 
 UP000005640_9606.fasta.gz: 
 	Rscript -e 'bianchietal2017::download_proteome(fasta_gz_filename = "UP000005640_9606.fasta.gz")'
@@ -11,3 +11,6 @@ schellens_et_al_2015_sup_1.xlsx:
 
 matches.csv: UP000005640_9606.fasta schellens_et_al_2015_sup_1.xlsx
 	Rscript create_matches_csv.R
+
+unique_matches_tmhmm.csv: matches.csv
+	Rscripr create_unique_matches_tmhmm_csv.R
