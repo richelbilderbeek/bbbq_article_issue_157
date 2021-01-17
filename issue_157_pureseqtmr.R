@@ -9,8 +9,9 @@ if (1 == 2) {
 #are derived from TMHs.
 
 #Here we obtain the human reference proteome used:
-t_proteome <- get_proteome(fasta_gz_filename = download_proteome())
-names(t_proteome)
+#t_proteome <- get_proteome(fasta_filename = UP000005640_9606.fasta)
+#t_proteome <- get_proteome(fasta_filename = UP000005640_9606.fasta)
+#names(t_proteome)
 
 # The human reference proteome contains 20600 sequences.
 testthat::expect_equal(nrow(t_proteome), 20600)

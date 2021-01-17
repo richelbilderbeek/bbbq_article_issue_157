@@ -8,8 +8,11 @@ if (1 == 2) {
 #It is claimed that some eluates from Schellens et al., 2015,
 #are derived from TMHs.
 
-#Here we obtain the human reference proteome used:
-t_proteome <- get_proteome(fasta_gz_filename = download_proteome())
+# Here we obtain the human reference proteome used:
+fasta_filename <- "UP000005640_9606.fasta"
+testthat::expect_true(file.exists(fasta_filename))
+t_proteome <- pureseqtmr::load_fasta_file_as_tibble(fasta_filename = fasta_filename)
+
 names(t_proteome)
 
 # The human reference proteome contains 20600 sequences.
