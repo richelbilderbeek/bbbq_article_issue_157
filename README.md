@@ -1,9 +1,10 @@
 # bbbq_article_issue_157
 
-BBBQ article Issue 157
+BBBQ article Issue 157.
 
 ## Results
 
- * [results/unique_matches_pureseqtm.csv](results/unique_matches_pureseqtm.csv)
- * [results/unique_matches_tmhmm.csv](results/unique_matches_tmhmm.csv)
+ * [results/results.csv](results/results.csv)
+ * [results/tmhs_pureseqtm.csv](results/tmhs_pureseqtm.csv)
+ * [results/tmhs_tmhmm.csv](results/tmhs_tmhmm.csv)
 
