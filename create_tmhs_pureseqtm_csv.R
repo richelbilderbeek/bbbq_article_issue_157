@@ -9,22 +9,15 @@ library(ggplot2, quietly = TRUE)
 
 #The question is, for unique mapping of an epitope onto the human reference proteome:
 #are those epitopes indeed overlapping with a TMH?
-if (!file.exists("unique_matches_pureseqtm.csv")) {
-  t_unique_matches <- dplyr::filter(t_matches, n_matches == 1)
-  t_unique_matches$pureseqtm_topology <- NA
-  readr::write_csv(t_unique_matches, "unique_matches_pureseqtm.csv")
-}
-t_unique_matches <- readr::read_csv("unique_matches_pureseqtm.csv")
+t_unique_matches <- dplyr::filter(t_matches, n_matches == 1)
 
-for (i in seq_len(nrow(t_unique_matches))) {
-  print(paste0(i, "/", nrow(t_unique_matches)))
-  if (!is.na(t_unique_matches$pureseqtm_topology[i])) next
-  t_unique_matches$pureseqtm_topology[i] <- pureseqtmr::predict_topology_from_sequence(
-    protein_sequence = t_unique_matches$sequence[i]
-  )
-  readr::write_csv(t_unique_matches, "unique_matches_pureseqtm.csv")
-}
-
+t_topology <- bbbq::get_topology(
+  proteome_type = "representative",
+  keep_selenoproteins = FALSE,
+  topology_prediction_tool = "pureseqtmr"
+)
+names(t_topology)  <- c("gene_name", "pureseqtm_topology")
+t_unique_matches <- dplyr::left_join(t_unique_matches, t_topology, by = "gene_name")
 
 t_tmhs_pureseqtm <- t_unique_matches[
   stringr::str_which(

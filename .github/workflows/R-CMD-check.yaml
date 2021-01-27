@@ -35,32 +35,20 @@ jobs:
         run: remotes::install_github("richelbilderbeek/bianchi_et_al_2017")
         shell: Rscript {0}
 
-      - name: Install pureseqtmr
-        run: remotes::install_github("richelbilderbeek/pureseqtmr")
+      - name: Install bbbq
+        run: remotes::install_github("richelbilderbeek/bbbq")
         shell: Rscript {0}
 
-      - name: Install PureseqTM
-        run: pureseqt:r:install_pureseqtm()
+      - name: Install pureseqtmr
+        run: remotes::install_github("richelbilderbeek/pureseqtmr")
         shell: Rscript {0}
 
       - name: Install tmhmm
         run: remotes::install_github("richelbilderbeek/tmhmm")
         shell: Rscript {0}
 
-      - name: get UP000005640_9606.fasta.gz
-        run: make UP000005640_9606.fasta.gz
-
-      - name: get UP000005640_9606.fasta
-        run: make UP000005640_9606.fasta
-
-      - name: simplify FASTA to 2 proteins
-        run: ./simplify_fasta.sh
-
-      - name: make matches.csv 
-        run: make matches.csv
-
-      - name: make tmhs_pureseqtm.csv
-        run: make tmhs_pureseqtm.csv
+      - name: make
+        run: make
 
       - name: show results
         run: cat tmhs_pureseqtm.csv
