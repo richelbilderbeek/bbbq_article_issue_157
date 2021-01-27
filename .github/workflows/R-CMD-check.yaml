@@ -42,6 +42,26 @@ jobs:
         run: remotes::install_github("richelbilderbeek/epiprepreds")
         shell: Rscript {0}
 
+      - name: Install R.utils
+        run: install.packages(c("R.utils", "readxl"))
+        shell: Rscript {0}
+
+      - name: Install nmhc2ppreds
+        run: remotes::install_github("richelbilderbeek/nmhc2ppreds")
+        shell: Rscript {0}
+
+      - name: Install mhcnpreds
+        run: remotes::install_github("richelbilderbeek/mhcnpreds")
+        shell: Rscript {0}
+
+      - name: Install Biostrings
+        run: remotes::install_bioc("Biostrings")
+        shell: Rscript {0}
+
+      - name: Install msa
+        run: remotes::install_bioc("msa")
+        shell: Rscript {0}
+          
       - name: Install bbbq
         run: remotes::install_github("richelbilderbeek/bbbq")
         shell: Rscript {0}
