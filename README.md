@@ -2,6 +2,14 @@
 
 BBBQ article Issue 157.
 
+## Running the scripts
+
+From a terminal, do:
+
+```
+make
+```
+
 ## Results
 
  * [results/results.csv](results/results.csv)
