@@ -30,9 +30,16 @@ jobs:
         run: install.packages(c("R.utils", "readxl"))
         shell: Rscript {0}
 
-
       - name: Install dependencies
         run: remotes::install_github("richelbilderbeek/bianchi_et_al_2017")
+        shell: Rscript {0}
+
+      - name: Install mhcnpreds
+        run: remotes::install_github("jtextor/EpitopePrediction")
+        shell: Rscript {0}
+
+      - name: Install mhcnpreds
+        run: remotes::install_github("richelbilderbeek/epiprepreds")
         shell: Rscript {0}
 
       - name: Install bbbq
