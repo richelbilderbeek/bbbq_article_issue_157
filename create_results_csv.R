@@ -15,6 +15,7 @@ t_tmhs_pureseqtm <- readr::read_csv(tmhs_pureseqtm_csv_filename)
 t$n[1] <- length(t_tmhs_pureseqtm$topology_overlap)
 t$n_tmh[1] <- length(stringr::str_which(t_tmhs_pureseqtm$topology_overlap, pattern = "1"))
 
+
 # TMHMM
 t_tmhs_tmhmm <- readr::read_csv(tmhs_tmhmm_csv_filename)
 t$n[2] <- length(t_tmhs_tmhmm$topology_overlap)
@@ -22,3 +23,20 @@ t$n_tmh[2] <- length(stringr::str_which(t_tmhs_tmhmm$topology_overlap, pattern =
 
 t$f_tmh <- t$n_tmh / t$n
 readr::write_csv(x = t, "results.csv")
+
+
+t_tmh <- t_tmhs_pureseqtm[ stringr::str_which(t_tmhs_pureseqtm$topology_overlap, pattern = "1"), ]
+
+readr::write_lines(
+  stringr::str_match(
+    t_tmh$gene_name,
+      "^..\\|.*\\|([^ ]+) .*"
+  )[, 2],
+  "~/tmh_gene_names.txt"
+)
+
+t_fasta <- tibble::tibble(
+  name = t_tmh$gene_name,
+  sequence = t_tmh$sequence
+)
+pureseqtmr::save_tibble_as_fasta_file(t_fasta, "~/tmhs.fasta")

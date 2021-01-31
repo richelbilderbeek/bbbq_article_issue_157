@@ -10,14 +10,18 @@ library(ggplot2, quietly = TRUE)
 #The question is, for unique mapping of an epitope onto the human reference proteome:
 #are those epitopes indeed overlapping with a TMH?
 t_unique_matches <- dplyr::filter(t_matches, n_matches == 1)
+testthat::expect_equal(nrow(t_unique_matches), 6994)
 
 t_topology <- bbbq::get_topology(
   proteome_type = "representative",
   keep_selenoproteins = FALSE,
   topology_prediction_tool = "tmhmm"
 )
+testthat::expect_equal(nrow(t_topology), 20575)
 names(t_topology)  <- c("gene_name", "tmhmm_topology")
+
 t_unique_matches <- dplyr::left_join(t_unique_matches, t_topology, by = "gene_name")
+testthat::expect_equal(nrow(t_unique_matches), 6994)
 
 t_tmhs_tmhmm <- t_unique_matches[
   stringr::str_which(
@@ -25,6 +29,7 @@ t_tmhs_tmhmm <- t_unique_matches[
     "(m|M)"
   ),
 ]
+testthat::expect_equal(nrow(t_tmhs_tmhmm), 780)
 
 testthat::expect_equal(
   nchar(t_tmhs_tmhmm$sequence),
