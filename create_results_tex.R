@@ -7,6 +7,19 @@ t$n <- NULL
 t$f_tmh <- NULL
 t
 print(
-  xtable::xtable(t, type = "latex"),
+  xtable::xtable(
+    t,
+    caption = paste0(
+      "Percentage of epitopes derived from a TMH",
+      "found in the two elution studies, ",
+      "for the two different kind of topology",
+      "prediction tools. The values between braces show the the number of",
+      "epitopes that were predicted to overlapping with a TMH per all",
+      "epitopes that could be uniquely mapped to the ",
+      "representative human reference proteome."
+    ),
+    label = "tab:elution",
+    type = "latex"
+  ),
   file = "results.tex"
 )
