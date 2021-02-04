@@ -1,5 +1,9 @@
 all: results.csv
 
+# Create the LaTeX table
+tex: results.csv
+	Rscript create_results_tex.R
+
 matches_1.csv:
 	Rscript create_matches_csv.R 1
 
