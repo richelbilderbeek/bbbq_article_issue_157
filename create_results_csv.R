@@ -1,9 +1,3 @@
-
-tmhs_tmhmm_csv_filename <- "tmhs_tmhmm.csv"
-tmhs_pureseqtm_csv_filename <- "tmhs_pureseqtm.csv"
-testthat::expect_true(file.exists(tmhs_tmhmm_csv_filename))
-testthat::expect_true(file.exists(tmhs_pureseqtm_csv_filename))
-
 t <- tidyr::expand_grid(
   tool = c("PureseqTM", "TMHMM"),
   mhc_class = c(1, 2),

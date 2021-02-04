@@ -1,8 +1,4 @@
-all: matches_1.csv matches_2.csv \
-  tmhs_tmhmm_1.csv tmhs_tmhmm_2.csv \
-  tmhs_pureseqtm_1.csv tmhs_pureseqtm_2.csv
-
-not_now: results.csv
+all: results.csv
 
 matches_1.csv:
 	Rscript create_matches_csv.R 1
