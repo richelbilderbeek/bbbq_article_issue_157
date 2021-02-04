@@ -1,42 +1,32 @@
+
 tmhs_tmhmm_csv_filename <- "tmhs_tmhmm.csv"
 tmhs_pureseqtm_csv_filename <- "tmhs_pureseqtm.csv"
 testthat::expect_true(file.exists(tmhs_tmhmm_csv_filename))
 testthat::expect_true(file.exists(tmhs_pureseqtm_csv_filename))
 
-t <- tibble::tibble(
+t <- tidyr::expand_grid(
   tool = c("PureseqTM", "TMHMM"),
+  mhc_class = c(1, 2),
   n = NA,
   n_tmh = NA,
   f_tmh = NA,
 )
+for (i in seq_len(nrow(t))) {
+  tool <- t$tool[i]
+  mhc_class <- t$mhc_class[i]
+  tmhs_csv_filename <- NA
+  if (tool == "PureseqTM") {
+    tmhs_csv_filename <- paste0("tmhs_pureseqtm_", mhc_class, ".csv")
+  } else {
+    testthat::expect_equal(tool, "TMHMM")
+    tmhs_csv_filename <- paste0("tmhs_tmhmm_", mhc_class, ".csv")
+  }
+  testthat::expect_true(file.exists(tmhs_csv_filename))
+  t_tmhs <- readr::read_csv(tmhs_csv_filename)
+  t$n[i] <- length(t_tmhs$topology_overlap)
+  t$n_tmh[i] <- length(stringr::str_which(t_tmhs$topology_overlap, pattern = "[1Mm]"))
 
-# PureseqTM
-t_tmhs_pureseqtm <- readr::read_csv(tmhs_pureseqtm_csv_filename)
-t$n[1] <- length(t_tmhs_pureseqtm$topology_overlap)
-t$n_tmh[1] <- length(stringr::str_which(t_tmhs_pureseqtm$topology_overlap, pattern = "1"))
-
-
-# TMHMM
-t_tmhs_tmhmm <- readr::read_csv(tmhs_tmhmm_csv_filename)
-t$n[2] <- length(t_tmhs_tmhmm$topology_overlap)
-t$n_tmh[2] <- length(stringr::str_which(t_tmhs_tmhmm$topology_overlap, pattern = "(M|m)"))
+}
 
 t$f_tmh <- t$n_tmh / t$n
 readr::write_csv(x = t, "results.csv")
-
-
-t_tmh <- t_tmhs_pureseqtm[ stringr::str_which(t_tmhs_pureseqtm$topology_overlap, pattern = "1"), ]
-
-readr::write_lines(
-  stringr::str_match(
-    t_tmh$gene_name,
-      "^..\\|.*\\|([^ ]+) .*"
-  )[, 2],
-  "~/tmh_gene_names.txt"
-)
-
-t_fasta <- tibble::tibble(
-  name = t_tmh$gene_name,
-  sequence = t_tmh$sequence
-)
-pureseqtmr::save_tibble_as_fasta_file(t_fasta, "~/tmhs.fasta")

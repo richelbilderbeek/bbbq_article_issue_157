@@ -27,7 +27,9 @@ make
 ## Results
 
  * [results/results.csv](results/results.csv)
- * [results/tmhs_pureseqtm.csv](results/tmhs_pureseqtm.csv)
- * [results/tmhs_tmhmm.csv](results/tmhs_tmhmm.csv)
+ * [results/tmhs_pureseqtm.csv](results/tmhs_pureseqtm_1.csv)
+ * [results/tmhs_tmhmm.csv](results/tmhs_tmhmm_1.csv)
+ * [results/tmhs_pureseqtm.csv](results/tmhs_pureseqtm_2.csv)
+ * [results/tmhs_tmhmm.csv](results/tmhs_tmhmm_2.csv)
 
 
