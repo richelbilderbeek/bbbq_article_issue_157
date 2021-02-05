@@ -4,6 +4,7 @@ t <- readr::read_csv("results.csv")
 t$mhc_class <- as.character(as.roman(t$mhc_class))
 t$n_tmh <- paste0(round(t$f_tmh * 100), "% (", t$n_tmh, "/", t$n, ")")
 t$n <- NULL
+t$n_tmp <- NULL
 t$f_tmh <- NULL
 t
 print(

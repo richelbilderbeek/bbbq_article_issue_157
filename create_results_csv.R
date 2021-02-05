@@ -1,6 +1,6 @@
 t <- tidyr::expand_grid(
-  tool = c("PureseqTM", "TMHMM"),
   mhc_class = c(1, 2),
+  tool = c("PureseqTM", "TMHMM"),
   n = NA,     # Number of epitopes in proteome
   n_tmp = NA, # Number of epitopes in transmembrane protein
   n_tmh = NA, # Number of epitopes in transmembrane helix
