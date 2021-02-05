@@ -64,6 +64,8 @@ t_tmhs_pureseqtm <- t_unique_matches[
     "1"
   ),
 ]
+
+# These are the epitopes found on transmembrane proteins only
 if (mhc_class == 1) testthat::expect_equal(nrow(t_tmhs_pureseqtm), 974)
 if (mhc_class == 2) testthat::expect_equal(nrow(t_tmhs_pureseqtm), 5793)
 

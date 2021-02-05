@@ -1,13 +1,15 @@
 t <- tidyr::expand_grid(
   tool = c("PureseqTM", "TMHMM"),
   mhc_class = c(1, 2),
-  n = NA,
-  n_tmh = NA,
+  n = NA,     # Number of epitopes in proteome
+  n_tmp = NA, # Number of epitopes in transmembrane protein
+  n_tmh = NA, # Number of epitopes in transmembrane helix
   f_tmh = NA,
 )
 for (i in seq_len(nrow(t))) {
   tool <- t$tool[i]
   mhc_class <- t$mhc_class[i]
+  t$n[i] <- nrow(readr::read_csv(paste0("matches_", mhc_class, ".csv")))
   tmhs_csv_filename <- NA
   if (tool == "PureseqTM") {
     tmhs_csv_filename <- paste0("tmhs_pureseqtm_", mhc_class, ".csv")
@@ -17,7 +19,7 @@ for (i in seq_len(nrow(t))) {
   }
   testthat::expect_true(file.exists(tmhs_csv_filename))
   t_tmhs <- readr::read_csv(tmhs_csv_filename)
-  t$n[i] <- length(t_tmhs$topology_overlap)
+  t$n_tmp[i] <- length(t_tmhs$topology_overlap)
   t$n_tmh[i] <- length(stringr::str_which(t_tmhs$topology_overlap, pattern = "[1Mm]"))
 
 }

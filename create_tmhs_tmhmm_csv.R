@@ -62,9 +62,11 @@ if (mhc_class == 2) testthat::expect_equal(nrow(t_unique_matches), 10450)
 t_tmhs_tmhmm <- t_unique_matches[
   stringr::str_which(
     t_unique_matches$tmhmm_topology,
-    "(m|M)"
+    "[mM]"
   ),
 ]
+
+# These are the epitopes found on transmembrane proteins only
 if (mhc_class == 1) testthat::expect_equal(nrow(t_tmhs_tmhmm), 780)
 if (mhc_class == 2) testthat::expect_equal(nrow(t_tmhs_tmhmm), 6023)
 
