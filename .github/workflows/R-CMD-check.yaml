@@ -75,8 +75,5 @@ jobs:
         shell: Rscript {0}
 
       - name: make
-        run: make
-
-      - name: show results
-        run: cat tmhs_pureseqtm.csv
+        run: make matches_1.csv
 
