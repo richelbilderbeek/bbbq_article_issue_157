@@ -61,6 +61,11 @@ readr::write_csv(
   analyse_epitopes(t_matches, positions = c(1, 2, 3, 4, 5)),
   "~/five_before_epitopes.csv"
 )
+t <- tibble::tibble(
+  name = paste0("iloverichel", seq_len(length(t_matches))),
+  sequence = stringr::str_sub(t_matches, 1, 5)
+)
+pureseqtmr::save_tibble_as_fasta_file(t, "~/five_before_epitopes.fasta")
 
 # The five epitopes after
 t_matches <- stringr::str_match(
@@ -74,3 +79,9 @@ readr::write_csv(
   analyse_epitopes(t_matches, positions = c(-5, -4, -3, -2, -1)),
   "~/five_after_epitopes.csv"
 )
+
+t <- tibble::tibble(
+  name = paste0("iloverichel", seq_len(length(t_matches))),
+  sequence = stringr::str_sub(t_matches, -5)
+)
+pureseqtmr::save_tibble_as_fasta_file(t, "~/five_after_epitopes.fasta")
