@@ -85,3 +85,13 @@ t <- tibble::tibble(
   sequence = stringr::str_sub(t_matches, -5)
 )
 pureseqtmr::save_tibble_as_fasta_file(t, "~/five_after_epitopes.fasta")
+
+
+# hoe staat dit resultaat ten opzichte van amino acid occurence?
+library(bbbq)
+proteome <- bbbq::get_proteome(proteome_type = "representative")
+
+t <- tibble::tibble(
+  char = LETTERS,
+  n = 0
+)
