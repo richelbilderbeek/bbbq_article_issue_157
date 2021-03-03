@@ -55,7 +55,7 @@ t_matches <- stringr::str_match(
   pattern = paste0("[[:upper:]]{5}", t_unique$epitope_sequence)
 )[, 1]
 t_matches <- t_matches[!is.na(t_matches)]
-
+testthat::expect_equal(6933, length(t_matches))
 readr::write_lines(t_matches, "~/five_before_epitopes.txt")
 readr::write_csv(
   analyse_epitopes(t_matches, positions = c(1, 2, 3, 4, 5)),
@@ -73,6 +73,7 @@ t_matches <- stringr::str_match(
   pattern = paste0(t_unique$epitope_sequence, "[[:upper:]]{5}")
 )[, 1]
 t_matches <- t_matches[!is.na(t_matches)]
+testthat::expect_equal(6771, length(t_matches))
 
 readr::write_lines(t_matches, "~/five_after_epitopes.txt")
 readr::write_csv(
