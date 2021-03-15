@@ -1,7 +1,7 @@
 library(dplyr, warn.conflicts = FALSE)
 
 # How many AAs before and after the epitope
-n <- 5
+n <- 10
 
 #' Analyse the epitopes
 #' @param epitope_sequences sequences of epitopes
@@ -59,10 +59,13 @@ t_matches <- stringr::str_match(
 )[, 1]
 t_matches <- t_matches[!is.na(t_matches)]
 testthat::expect_equal(6933, length(t_matches))
-readr::write_lines(t_matches, paste0("~/", english::as.english(n) ,"_before_epitopes.txt"))
-readr::write_csv(
-  analyse_epitopes(t_matches, positions = c(1, 2, 3, 4, 5)),
+readr::write_lines(
+  t_matches,
   paste0("~/", english::as.english(n) ,"_before_epitopes.txt")
+)
+readr::write_csv(
+  analyse_epitopes(t_matches, positions = seq(1, n)),
+  paste0("~/", english::as.english(n) ,"_before_epitopes.csv")
 )
 t <- tibble::tibble(
   name = paste0("iloverichel", seq_len(length(t_matches))),
@@ -86,7 +89,7 @@ readr::write_lines(
   paste0("~/", english::as.english(n) ,"_after_epitopes.txt")
 )
 readr::write_csv(
-  analyse_epitopes(t_matches, positions = c(-5, -4, -3, -2, -1)),
+  analyse_epitopes(t_matches, positions = seq(-n, -1)),
   paste0("~/", english::as.english(n) ,"_after_epitopes.csv")
 )
 
