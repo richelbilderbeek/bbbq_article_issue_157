@@ -1,5 +1,8 @@
 library(dplyr, warn.conflicts = FALSE)
 
+# How many AAs before and after the epitope
+n <- 5
+
 #' Analyse the epitopes
 #' @param epitope_sequences sequences of epitopes
 #' @param positions string positions as used by \link[stringr]{str_sub}, e.g. '1' denotes the first character,
@@ -52,47 +55,47 @@ t_unique <- t %>% dplyr::filter(!is.na(gene_name))
 # The five epitopes before
 t_matches <- stringr::str_match(
   string = t_unique$sequence,
-  pattern = paste0("[[:upper:]]{5}", t_unique$epitope_sequence)
+  pattern = paste0("[[:upper:]]{", n, "}", t_unique$epitope_sequence)
 )[, 1]
 t_matches <- t_matches[!is.na(t_matches)]
 testthat::expect_equal(6933, length(t_matches))
-readr::write_lines(t_matches, "~/five_before_epitopes.txt")
+readr::write_lines(t_matches, paste0("~/", english::as.english(n) ,"_before_epitopes.txt"))
 readr::write_csv(
   analyse_epitopes(t_matches, positions = c(1, 2, 3, 4, 5)),
-  "~/five_before_epitopes.csv"
+  paste0("~/", english::as.english(n) ,"_before_epitopes.txt")
 )
 t <- tibble::tibble(
   name = paste0("iloverichel", seq_len(length(t_matches))),
-  sequence = stringr::str_sub(t_matches, 1, 5)
+  sequence = stringr::str_sub(t_matches, 1, n)
 )
-pureseqtmr::save_tibble_as_fasta_file(t, "~/five_before_epitopes.fasta")
+pureseqtmr::save_tibble_as_fasta_file(
+  t,
+  paste0("~/", english::as.english(n) ,"_before_epitopes.fasta")
+)
 
 # The five epitopes after
 t_matches <- stringr::str_match(
   string = t_unique$sequence,
-  pattern = paste0(t_unique$epitope_sequence, "[[:upper:]]{5}")
+  pattern = paste0(t_unique$epitope_sequence, "[[:upper:]]{", n, "}")
 )[, 1]
 t_matches <- t_matches[!is.na(t_matches)]
 testthat::expect_equal(6771, length(t_matches))
 
-readr::write_lines(t_matches, "~/five_after_epitopes.txt")
+readr::write_lines(
+  t_matches,
+  paste0("~/", english::as.english(n) ,"_after_epitopes.txt")
+)
 readr::write_csv(
   analyse_epitopes(t_matches, positions = c(-5, -4, -3, -2, -1)),
-  "~/five_after_epitopes.csv"
+  paste0("~/", english::as.english(n) ,"_after_epitopes.csv")
 )
 
 t <- tibble::tibble(
   name = paste0("iloverichel", seq_len(length(t_matches))),
-  sequence = stringr::str_sub(t_matches, -5)
+  sequence = stringr::str_sub(t_matches, -n)
 )
-pureseqtmr::save_tibble_as_fasta_file(t, "~/five_after_epitopes.fasta")
-
-
-# hoe staat dit resultaat ten opzichte van amino acid occurence?
-library(bbbq)
-proteome <- bbbq::get_proteome(proteome_type = "representative")
-
-t <- tibble::tibble(
-  char = LETTERS,
-  n = 0
+pureseqtmr::save_tibble_as_fasta_file(
+  t,
+  paste0("~/", english::as.english(n) ,"_after_epitopes.fasta")
 )
+
