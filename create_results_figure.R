@@ -5,7 +5,7 @@ t$tool <- as.factor(t$tool)
 library(ggplot2)
 
 ggplot2::ggplot(t, ggplot2::aes(x = tool, y = f_tmh)) +
-  ggplot2::geom_col() +
+  ggplot2::geom_col(fill = "#BBBBBB") +
   ggplot2::scale_y_continuous(
     "Percentage of epitopes that are predicted to be TMH",
     labels = scales::percent
