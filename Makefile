@@ -25,5 +25,11 @@ tmhs_pureseqtm_2.csv: matches_2.csv
 results.csv: tmhs_tmhmm_1.csv tmhs_pureseqtm_1.csv tmhs_tmhmm_2.csv tmhs_pureseqtm_2.csv
 	Rscript create_results_csv.R
 
+results.png: tmhs_tmhmm_1.csv tmhs_pureseqtm_1.csv tmhs_tmhmm_2.csv tmhs_pureseqtm_2.csv
+	Rscript create_results_figure.R
+
+results.csv: tmhs_tmhmm_1.csv tmhs_pureseqtm_1.csv tmhs_tmhmm_2.csv tmhs_pureseqtm_2.csv
+	Rscript create_results_tex.R
+
 clean:
 	rm *.csv
