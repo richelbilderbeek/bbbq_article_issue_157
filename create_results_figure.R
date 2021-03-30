@@ -16,12 +16,6 @@ ggplot2::ggplot(t, ggplot2::aes(x = tool, y = f_tmh)) +
   ggplot2::facet_grid(
     . ~ mhc_class,
     labeller = ggplot2::as_labeller(c(I = "MHC-I", II = "MHC-II"))
-  ) + ggplot2::theme_bw() +
-  ggplot2::theme(axis.line = ggplot2::element_line(colour = "black"),
-    panel.grid.major = ggplot2::element_blank(),
-    panel.grid.minor = ggplot2::element_blank(),
-    panel.border = ggplot2::element_blank(),
-    panel.background = ggplot2::element_blank(),
-    legend.key = ggplot2::element_blank(),
-    strip.background = ggplot2::element_rect(colour="white", fill="#FFFFFF")
-  ) + ggplot2::ggsave("results.png", width = 7, height = 7)
+  ) + bbbq::get_bbbq_theme() +
+  ggplot2::theme(text = element_text(size = 17)) +
+  ggplot2::ggsave("results.png", width = 7, height = 7)
