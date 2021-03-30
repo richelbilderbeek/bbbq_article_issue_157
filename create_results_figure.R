@@ -7,7 +7,7 @@ library(ggplot2)
 ggplot2::ggplot(t, ggplot2::aes(x = tool, y = f_tmh)) +
   ggplot2::geom_col(fill = "#BBBBBB") +
   ggplot2::scale_y_continuous(
-    "Percentage of epitopes that are predicted to be TMH",
+    "Epitopes derived from TMH",
     labels = scales::percent
   ) +
   ggplot2::scale_x_discrete(
@@ -17,5 +17,6 @@ ggplot2::ggplot(t, ggplot2::aes(x = tool, y = f_tmh)) +
     . ~ mhc_class,
     labeller = ggplot2::as_labeller(c(I = "MHC-I", II = "MHC-II"))
   ) + bbbq::get_bbbq_theme() +
-  ggplot2::theme(text = element_text(size = 17)) +
+  ggplot2::theme(text = ggplot2::element_text(size = 24)) +
   ggplot2::ggsave("results.png", width = 7, height = 7)
+
