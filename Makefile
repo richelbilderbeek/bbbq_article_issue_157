@@ -1,4 +1,4 @@
-all: results.csv
+all: results.csv results.tiff results.png
 
 # Create the LaTeX table
 tex: results.csv
@@ -26,6 +26,9 @@ results.csv: tmhs_tmhmm_1.csv tmhs_pureseqtm_1.csv tmhs_tmhmm_2.csv tmhs_pureseq
 	Rscript create_results_csv.R
 
 results.png: tmhs_tmhmm_1.csv tmhs_pureseqtm_1.csv tmhs_tmhmm_2.csv tmhs_pureseqtm_2.csv
+	Rscript create_results_figure.R
+
+results.tiff: tmhs_tmhmm_1.csv tmhs_pureseqtm_1.csv tmhs_tmhmm_2.csv tmhs_pureseqtm_2.csv
 	Rscript create_results_figure.R
 
 results.csv: tmhs_tmhmm_1.csv tmhs_pureseqtm_1.csv tmhs_tmhmm_2.csv tmhs_pureseqtm_2.csv
