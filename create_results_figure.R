@@ -19,6 +19,7 @@ p <- ggplot2::ggplot(t, ggplot2::aes(x = tool, y = f_tmh)) +
   ) + bbbq::get_bbbq_theme() +
   ggplot2::theme(text = ggplot2::element_text(size = 24))
 
-p + ggplot2::ggsave("results.png", width = 7, height = 7)
-p + ggplot2::ggsave("results.tiff", width = 7, height = 7)
+p; ggplot2::ggsave("results.png", width = 7, height = 7)
+p; ggplot2::ggsave("results.tiff", width = 7, height = 7)
+p; ggplot2::ggsave("results.eps", width = 7, height = 7)
 
