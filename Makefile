@@ -1,6 +1,16 @@
 all: results.csv results.tiff results.png results.tex
 
 matches_1.csv:
+	Rscript -e 'remotes::install_github("richelbilderbeek/mhcnuggetsr")'
+	Rscript -e 'remotes::install_github("richelbilderbeek/mhcnuggetsrinstall")'
+	Rscript -e 'if (!mhcnuggetsr::is_mhcnuggets_installed()) mhcnuggetsrinstall::install_mhcnuggets()'
+	Rscript -e 'remotes::install_github("richelbilderbeek/mhcnpreds")'
+	Rscript -e 'remotes::install_github("richelbilderbeek/nmhc2ppreds")'
+	Rscript -e 'remotes::install_github("richelbilderbeek/tmhmm")'
+	Rscript -e 'remotes::install_github("richelbilderbeek/epiprepreds")'
+	Rscript -e 'remotes::install_github("richelbilderbeek/pureseqtmr")'
+	Rscript -e 'remotes::install_bioc("Biostrings")'
+	Rscript -e 'remotes::install_github("richelbilderbeek/bbbq")'
 	Rscript -e 'remotes::install_github("richelbilderbeek/bianchi_et_al_2017")'
 	Rscript create_matches_csv.R 1
 
