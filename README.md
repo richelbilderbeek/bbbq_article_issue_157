@@ -1,5 +1,10 @@
 # bbbq_article_issue_157
 
+Branch   |[![GitHub Actions logo](man/figures/GitHubActions.png)](https://github.com/richelbilderbeek/bbbq_article_issue_157/actions)| [![Codecov logo](pics/Codecov.png)](https://www.codecov.io)
+---------|---------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------
+`master` |![R-CMD-check](https://github.com/richelbilderbeek/bbbq_article_issue_157/workflows/R-CMD-check/badge.svg?branch=master)   |[![codecov.io](https://codecov.io/github/richelbilderbeek/bbbq_article_issue_157/coverage.svg?branch=master)](https://codecov.io/github/richelbilderbeek/bbbq_article_issue_157?branch=master)
+`develop`|![R-CMD-check](https://github.com/richelbilderbeek/bbbq_article_issue_157/workflows/R-CMD-check/badge.svg?branch=develop)  |[![codecov.io](https://codecov.io/github/richelbilderbeek/bbbq_article_issue_157/coverage.svg?branch=develop)](https://codecov.io/github/richelbilderbeek/bbbq_article_issue_157?branch=develop)
+
 BBBQ article Issue 157.
 
 ## Installation
