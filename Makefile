@@ -1,8 +1,4 @@
-all: results.csv results.tiff results.png
-
-# Create the LaTeX table
-tex: results.csv
-	Rscript create_results_tex.R
+all: results.csv results.tiff results.png results.tex
 
 matches_1.csv:
 	Rscript -e 'remotes::install_github("richelbilderbeek/bianchi_et_al_2017")'
