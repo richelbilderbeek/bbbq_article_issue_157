@@ -5,6 +5,7 @@ tex: results.csv
 	Rscript create_results_tex.R
 
 matches_1.csv:
+	Rscript -e 'remotes::install_github("richelbilderbeek/bianchi_et_al_2017")'
 	Rscript create_matches_csv.R 1
 
 matches_2.csv:
