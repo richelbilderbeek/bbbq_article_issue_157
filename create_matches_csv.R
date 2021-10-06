@@ -35,8 +35,14 @@ testthat::expect_equal(nrow(t_proteome), 20575)
 
 epitope_sequences <- NA
 if (mhc_class == 1) {
+  xlsx_filename <- "schellens_et_al_2015_sup_1.xlsl"
   # Here we obtain the (unique) epitope sequences from Schellens et al., 2015:
-  t_schellens <- bianchietal2017::get_schellens_et_al_2015_sup_1()
+  bianchietal2017::download_schellens_et_al_2015_sup_1(
+    xlsx_filename = xlsx_filename
+  )
+  t_schellens <- bianchietal2017::get_schellens_et_al_2015_sup_1(
+    xlsx_filename = xlsx_filename
+  )
   epitope_sequences <- unique(t_schellens$epitope_sequence)
   # There are 7897 unique epitope sequences.
   testthat::expect_equal(7897, length(epitope_sequences))
