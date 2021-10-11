@@ -33,6 +33,19 @@ t_proteome <- bbbq::get_proteome(
 # removed the 25 selenoproteins.
 testthat::expect_equal(nrow(t_proteome), 20575)
 
+# Extract the epitope sequences from:
+#   * MHC-I: Schellens et al., IEDB T-Cell, IEDB ligands
+#   * MHC-II: Bergseng et al., IEDB T-Cell, IEDB ligands
+get_epitope_sequences_mhc_1_schellens <- function() {
+  
+}
+get_epitope_sequences_mhc_1_iedb_t_cell <- function() {
+  
+}
+get_epitope_sequences_mhc_1_iedb_ligand <- function() {
+  
+}
+
 epitope_sequences <- NA
 if (mhc_class == 1) {
   xlsx_filename <- "schellens_et_al_2015_sup_1.xlsl"
