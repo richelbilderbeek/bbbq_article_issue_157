@@ -7,6 +7,8 @@ Branch   |[![GitHub Actions logo](pics/GitHubActions.png)](https://github.com/ri
 
 BBBQ article Issue 157.
 
+![Result of BBBQ article Issue 157](results.png)
+
 ## Installation
 
 From R, run:
