@@ -4,15 +4,24 @@ args <- commandArgs(trailingOnly = TRUE)
 message("args: {", paste0(args, collapse = ", "), "}")
 
 if (1 == 2) {
-  args <- c("1")
+  setwd("~/GitHubs/bbbq_article_issue_157"); list.files()
+  args <- c("1", "schellens")
+  args <- c("2", "bergseng")
+  args <- c("1", "iedb")
+  args <- c("2", "iedb")
 }
-testthat::expect_equal(length(args), 1)
+testthat::expect_equal(length(args), 2)
 mhc_class <- as.numeric(args[1])
 message("mhc_class: ", mhc_class)
 mhc_class <- as.numeric(args[1])
 testthat::expect_true(mhc_class %in% c(1, 2))
+dataset <- as.character(args[2])
+message("dataset: ", dataset)
+testthat::expect_true(dataset %in% c("schellens", "bergseng", "iedb"))
+testthat::expect_true(dataset != "schellens" || mhc_class == 1) # Schellens is MHC-I
+testthat::expect_true(dataset != "bergseng" || mhc_class == 2) # Bergseng is MHC-II
 
-matches_csv_filename <- paste0("matches_", mhc_class, ".csv")
+matches_csv_filename <- paste0("matches_", dataset, "_", mhc_class, ".csv")
 message(
   "matches_csv_filename: ", matches_csv_filename,
   " (this is the file to be created)"
@@ -34,20 +43,13 @@ t_proteome <- bbbq::get_proteome(
 testthat::expect_equal(nrow(t_proteome), 20575)
 
 # Extract the epitope sequences from:
-#   * MHC-I: Schellens et al., IEDB T-Cell, IEDB ligands
-#   * MHC-II: Bergseng et al., IEDB T-Cell, IEDB ligands
-get_epitope_sequences_mhc_1_schellens <- function() {
-  
-}
-get_epitope_sequences_mhc_1_iedb_t_cell <- function() {
-  
-}
-get_epitope_sequences_mhc_1_iedb_ligand <- function() {
-  
-}
+#   * Schellens et al., MHC-I
+#   * Bergseng et al., MHC-II
+#   * IEDB, MHC-I
+#   * IEDB, MHC-II
 
-epitope_sequences <- NA
-if (mhc_class == 1) {
+#' @return a character vector of epitope sequences
+get_epitope_sequences_schellens_1 <- function() {
   xlsx_filename <- "schellens_et_al_2015_sup_1.xlsl"
   # Here we obtain the (unique) epitope sequences from Schellens et al., 2015:
   bianchietal2017::download_schellens_et_al_2015_sup_1(
@@ -59,11 +61,60 @@ if (mhc_class == 1) {
   epitope_sequences <- unique(t_schellens$epitope_sequence)
   # There are 7897 unique epitope sequences.
   testthat::expect_equal(7897, length(epitope_sequences))
-} else {
-  # Here we obtain the (unique) epitope sequences from Bergseng et al., 2015:
+  epitope_sequences
+}
+
+#' @return a character vector of epitope sequences
+get_epitope_sequences_bergseng_2 <- function() {
   t_berseng <- bbbq::get_bergseng_et_al_2015_sup_1()
   epitope_sequences <- unique(t_berseng$Sequence)
   testthat::expect_equal(12712, length(epitope_sequences))
+  epitope_sequences
+}
+
+#' @return a character vector of epitope sequences
+get_epitope_sequences_iedb_1 <- function() {
+  t <- readr::read_csv(
+    "iedb.csv",
+    col_types = readr::cols(
+      linear_sequence = readr::col_character(), 
+      haplotype = readr::col_character(), 
+      cell_type = readr::col_character() 
+    )
+  )
+  t <- t[t$haplotype %in% bbbq::get_mhc1_haplotypes(), ]
+  epitope_sequences <- t$linear_sequence
+  testthat::expect_equal(631, length(epitope_sequences))
+  epitope_sequences
+}
+
+#' @return a character vector of epitope sequences
+get_epitope_sequences_iedb_2 <- function() {
+  t <- readr::read_csv(
+    "iedb.csv",
+    col_types = readr::cols(
+      linear_sequence = readr::col_character(), 
+      haplotype = readr::col_character(), 
+      cell_type = readr::col_character() 
+    )
+  )
+  t <- t[!(t$haplotype %in% bbbq::get_mhc1_haplotypes()), ]
+  epitope_sequences <- t$linear_sequence
+  testthat::expect_equal(1364, length(epitope_sequences))
+  epitope_sequences
+}
+
+epitope_sequences <- NA
+if (mhc_class == 1 && dataset == "schellens") {
+  epitope_sequences <- get_epitope_sequences_schellens_1()
+} else if (mhc_class == 2 && dataset == "bergseng") {
+  epitope_sequences <- get_epitope_sequences_bergseng_2()
+} else if (mhc_class == 1 && dataset == "iedb") {
+  epitope_sequences <- get_epitope_sequences_iedb_1()
+} else if (mhc_class == 2 && dataset == "iedb") {
+  epitope_sequences <- get_epitope_sequences_iedb_2()
+} else {
+  stop("Should not get here")
 }
 
 t_matches <- tibble::tibble(

@@ -1,6 +1,6 @@
 all: results.csv results.tiff results.png results.tex iedb.csv
 
-matches_1.csv:
+matches_schellens_1.csv: create_matches_csv.R
 	Rscript -e 'remotes::install_github("richelbilderbeek/mhcnuggetsr")'
 	Rscript -e 'remotes::install_github("richelbilderbeek/mhcnuggetsrinstall")'
 	Rscript -e 'if (!mhcnuggetsr::is_mhcnuggets_installed()) mhcnuggetsrinstall::install_mhcnuggets()'
@@ -12,24 +12,30 @@ matches_1.csv:
 	Rscript -e 'remotes::install_bioc("Biostrings")'
 	Rscript -e 'remotes::install_github("richelbilderbeek/bbbq")'
 	Rscript -e 'remotes::install_github("richelbilderbeek/bianchi_et_al_2017")'
-	Rscript create_matches_csv.R 1
+	Rscript create_matches_csv.R 1 schellens
+
+matches_bergseng_2.csv: create_matches_csv.R
+	Rscript create_matches_csv.R 2 bergseng
 
 iedb.csv: create_iedb_csv.R
 	Rscript create_iedb_csv.R
 
-matches_2.csv:
-	Rscript create_matches_csv.R 2
+matches_iedb_1.csv: iedb.csv create_matches_csv.R
+	Rscript create_matches_csv.R 1 iedb
 
-tmhs_tmhmm_1.csv: matches_1.csv
+matches_iedb_2.csv: iedb.csv create_matches_csv.R
+	Rscript create_matches_csv.R 2 iedb
+
+tmhs_tmhmm_1.csv: matches_schellens_1.csv matches_iedb_1.csv
 	Rscript create_tmhs_tmhmm_csv.R 1
 
-tmhs_tmhmm_2.csv: matches_2.csv
+tmhs_tmhmm_2.csv: matches_bergseng_2.csv matches_iedb_2.csv
 	Rscript create_tmhs_tmhmm_csv.R 2
 
-tmhs_pureseqtm_1.csv: matches_1.csv
+tmhs_pureseqtm_1.csv: matches_schellens_1.csv matches_iedb_1.csv
 	Rscript create_tmhs_pureseqtm_csv.R 1
 
-tmhs_pureseqtm_2.csv: matches_2.csv
+tmhs_pureseqtm_2.csv: matches_bergseng_2.csv matches_iedb_2.csv
 	Rscript create_tmhs_pureseqtm_csv.R 2
 
 results.csv: tmhs_tmhmm_1.csv tmhs_pureseqtm_1.csv tmhs_tmhmm_2.csv tmhs_pureseqtm_2.csv
