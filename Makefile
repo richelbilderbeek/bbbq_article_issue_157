@@ -1,4 +1,4 @@
-all: results.csv results.tiff results.png results.tex
+all: results.csv results.tiff results.png results.tex iedb.csv
 
 matches_1.csv:
 	Rscript -e 'remotes::install_github("richelbilderbeek/mhcnuggetsr")'
@@ -13,6 +13,9 @@ matches_1.csv:
 	Rscript -e 'remotes::install_github("richelbilderbeek/bbbq")'
 	Rscript -e 'remotes::install_github("richelbilderbeek/bianchi_et_al_2017")'
 	Rscript create_matches_csv.R 1
+
+iedb.csv: create_iedb_csv.R
+	Rscript create_iedb_csv.R
 
 matches_2.csv:
 	Rscript create_matches_csv.R 2
