@@ -26,19 +26,38 @@ matches_iedb_1.csv: iedb.csv create_matches_csv.R
 matches_iedb_2.csv: iedb.csv create_matches_csv.R
 	Rscript create_matches_csv.R 2 iedb
 
-tmhs_tmhmm_1.csv: matches_schellens_1.csv matches_iedb_1.csv
-	Rscript create_tmhs_tmhmm_csv.R 1
+tmhs_tmhmm_schellens_1.csv: matches_schellens_1.csv
+	Rscript create_tmhs_tmhmm_csv.R 1 schellens
 
-tmhs_tmhmm_2.csv: matches_bergseng_2.csv matches_iedb_2.csv
-	Rscript create_tmhs_tmhmm_csv.R 2
+tmhs_tmhmm_iedb_1.csv: matches_iedb_1.csv
+	Rscript create_tmhs_tmhmm_csv.R 1 iedb
 
-tmhs_pureseqtm_1.csv: matches_schellens_1.csv matches_iedb_1.csv
-	Rscript create_tmhs_pureseqtm_csv.R 1
+tmhs_tmhmm_bergseng_2.csv: matches_bergseng_2.csv
+	Rscript create_tmhs_tmhmm_csv.R 2 bergseng
 
-tmhs_pureseqtm_2.csv: matches_bergseng_2.csv matches_iedb_2.csv
-	Rscript create_tmhs_pureseqtm_csv.R 2
+tmhs_tmhmm_iedb_2.csv: matches_iedb_2.csv
+	Rscript create_tmhs_tmhmm_csv.R 2 iedb
 
-results.csv: tmhs_tmhmm_1.csv tmhs_pureseqtm_1.csv tmhs_tmhmm_2.csv tmhs_pureseqtm_2.csv
+tmhs_pureseqtm_schellens_1.csv: matches_schellens_1.csv
+	Rscript create_tmhs_pureseqtm_csv.R 1 schellens
+
+tmhs_pureseqtm_iedb_1.csv: matches_iedb_1.csv
+	Rscript create_tmhs_pureseqtm_csv.R 1 iedb
+
+tmhs_pureseqtm_bergseng_2.csv: matches_bergseng_2.csv
+	Rscript create_tmhs_pureseqtm_csv.R 2 bergseng
+
+tmhs_pureseqtm_iedb_2.csv: matches_iedb_2.csv
+	Rscript create_tmhs_pureseqtm_csv.R 2 iedb
+
+results.csv: tmhs_tmhmm_schellens_1.csv \
+             tmhs_tmhmm_iedb_1.csv \
+             tmhs_tmhmm_bergseng_2.csv \
+             tmhs_tmhmm_iedb_2.csv \
+             tmhs_pureseqtm_schellens_1.csv \
+             tmhs_pureseqtm_iedb_1.csv \
+             tmhs_pureseqtm_bergseng_2.csv \
+             tmhs_pureseqtm_iedb_2.csv
 	Rscript create_results_csv.R
 
 results.png: tmhs_tmhmm_1.csv tmhs_pureseqtm_1.csv tmhs_tmhmm_2.csv tmhs_pureseqtm_2.csv
