@@ -1,6 +1,7 @@
-t <- tidyr::expand_grid(
-  mhc_class = c(1, 2),
-  tool = c("PureseqTM", "TMHMM"),
+t <- tibble::tibble(
+  mhc_class = c(1, 1, 2, 2),
+  tool = c("PureseqTM", "PureseqTM", "TMHMM", "TMHMM"),
+  dataset = c("schellens", "iedb", "bergseng", "iedb"),
   n = NA,     # Number of epitopes in proteome
   n_tmp = NA, # Number of epitopes in transmembrane protein
   n_tmh = NA, # Number of epitopes in transmembrane helix
@@ -9,13 +10,14 @@ t <- tidyr::expand_grid(
 for (i in seq_len(nrow(t))) {
   tool <- t$tool[i]
   mhc_class <- t$mhc_class[i]
-  t$n[i] <- nrow(readr::read_csv(paste0("matches_", mhc_class, ".csv")))
+  dataset <- t$dataset[i]
+  t$n[i] <- nrow(readr::read_csv(paste0("matches_", dataset, "_", mhc_class, ".csv")))
   tmhs_csv_filename <- NA
   if (tool == "PureseqTM") {
-    tmhs_csv_filename <- paste0("tmhs_pureseqtm_", mhc_class, ".csv")
+    tmhs_csv_filename <- paste0("tmhs_pureseqtm_", dataset, "_", mhc_class, ".csv")
   } else {
     testthat::expect_equal(tool, "TMHMM")
-    tmhs_csv_filename <- paste0("tmhs_tmhmm_", mhc_class, ".csv")
+    tmhs_csv_filename <- paste0("tmhs_tmhmm_", dataset, "_", mhc_class, ".csv")
   }
   testthat::expect_true(file.exists(tmhs_csv_filename))
   t_tmhs <- readr::read_csv(tmhs_csv_filename)
