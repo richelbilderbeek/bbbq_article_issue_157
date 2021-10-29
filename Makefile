@@ -60,13 +60,13 @@ results.csv: tmhs_tmhmm_schellens_1.csv \
              tmhs_pureseqtm_iedb_2.csv
 	Rscript create_results_csv.R
 
-results.png: tmhs_tmhmm_1.csv tmhs_pureseqtm_1.csv tmhs_tmhmm_2.csv tmhs_pureseqtm_2.csv
+results.png: results.csv
 	Rscript create_results_figure.R
 
-results.tiff: tmhs_tmhmm_1.csv tmhs_pureseqtm_1.csv tmhs_tmhmm_2.csv tmhs_pureseqtm_2.csv
+results.tiff: results.csv
 	Rscript create_results_figure.R
 
-results.tex: tmhs_tmhmm_1.csv tmhs_pureseqtm_1.csv tmhs_tmhmm_2.csv tmhs_pureseqtm_2.csv
+results.tex: results.csv
 	Rscript create_results_tex.R
 
 clean:

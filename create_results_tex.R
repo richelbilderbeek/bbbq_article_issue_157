@@ -1,4 +1,7 @@
-t <- readr::read_csv("results.csv")
+t <- readr::read_csv(
+  "results.csv",
+  show_col_types = FALSE
+)
 
 # Pretty print
 t$mhc_class <- as.character(as.roman(t$mhc_class))
@@ -11,11 +14,13 @@ t$n_tmp <- NULL
 t$f_tmh <- NULL
 testthat::expect_equal(names(t)[1], "mhc_class")
 testthat::expect_equal(names(t)[2], "tool")
-testthat::expect_equal(names(t)[3], "n_tmh")
-names(t) <- c("MHC class", "Tool", "n")
+testthat::expect_equal(names(t)[3], "dataset")
+testthat::expect_equal(names(t)[4], "n_tmh")
+names(t) <- c("MHC class", "Tool", "Dataset", "n")
 testthat::expect_equal(names(t)[1], "MHC class")
 testthat::expect_equal(names(t)[2], "Tool")
-testthat::expect_equal(names(t)[3], "n")
+testthat::expect_equal(names(t)[3], "Dataset")
+testthat::expect_equal(names(t)[4], "n")
 t
 print(
   xtable::xtable(
