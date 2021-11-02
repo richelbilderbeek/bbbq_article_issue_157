@@ -6,8 +6,9 @@ message("args: {", paste0(args, collapse = ", "), "}")
 if (1 == 2) {
   setwd("~/GitHubs/bbbq_article_issue_157"); list.files()
   args <- c("1", "schellens")
-  args <- c("1", "iedb_mhc_ligand")
   args <- c("2", "bergseng")
+  args <- c("1", "iedb_b_cell")
+  args <- c("1", "iedb_mhc_ligand")
   args <- c("2", "iedb_t_cell")
 }
 testthat::expect_equal(length(args), 2)
@@ -81,34 +82,22 @@ get_epitope_sequences_bergseng_2 <- function() {
 }
 
 #' @return a character vector of epitope sequences
-get_epitope_sequences_iedb_1 <- function() {
+get_epitope_sequences_iedb <- function(dataset, mhc_class) {
+  filename <- paste0(dataset, ".csv")
   t <- readr::read_csv(
-    "iedb.csv",
+    filename,
     col_types = readr::cols(
       linear_sequence = readr::col_character(), 
       haplotype = readr::col_character(), 
       cell_type = readr::col_character() 
     )
   )
-  t <- t[t$haplotype %in% bbbq::get_mhc1_haplotypes(), ]
+  haplotypes <- NA
+  if (mhc_class == 1) haplotypes <- bbbq::get_mhc1_haplotypes()
+  if (mhc_class == 2) haplotypes <- bbbq::get_mhc2_haplotypes()
+  testthat::expect_true(all(!is.na(haplotypes)))
+  t <- t[t$haplotype %in% haplotypes, ]
   epitope_sequences <- t$linear_sequence
-  testthat::expect_equal(631, length(epitope_sequences))
-  epitope_sequences
-}
-
-#' @return a character vector of epitope sequences
-get_epitope_sequences_iedb_2 <- function() {
-  t <- readr::read_csv(
-    "iedb.csv",
-    col_types = readr::cols(
-      linear_sequence = readr::col_character(), 
-      haplotype = readr::col_character(), 
-      cell_type = readr::col_character() 
-    )
-  )
-  t <- t[!(t$haplotype %in% bbbq::get_mhc1_haplotypes()), ]
-  epitope_sequences <- t$linear_sequence
-  testthat::expect_equal(1364, length(epitope_sequences))
   epitope_sequences
 }
 
@@ -117,12 +106,8 @@ if (mhc_class == 1 && dataset == "schellens") {
   epitope_sequences <- get_epitope_sequences_schellens_1()
 } else if (mhc_class == 2 && dataset == "bergseng") {
   epitope_sequences <- get_epitope_sequences_bergseng_2()
-} else if (mhc_class == 1 && dataset == "iedb") {
-  epitope_sequences <- get_epitope_sequences_iedb_1()
-} else if (mhc_class == 2 && dataset == "iedb") {
-  epitope_sequences <- get_epitope_sequences_iedb_2()
 } else {
-  stop("Should not get here")
+  epitope_sequences <- get_epitope_sequences_iedb(dataset, mhc_class)
 }
 
 t_matches <- tibble::tibble(
