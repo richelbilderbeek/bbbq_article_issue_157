@@ -5,6 +5,7 @@ t <- readr::read_csv(
 t$mhc_class <- as.character(as.roman(t$mhc_class))
 t$mhc_class <- as.factor(t$mhc_class)
 t$tool <- as.factor(t$tool)
+stop("Redo fig")
 t$dataset[t$dataset == "schellens"] <- "non_iedb"
 t$dataset[t$dataset == "bergseng"] <- "non_iedb"
 t$dataset <- as.factor(t$dataset)

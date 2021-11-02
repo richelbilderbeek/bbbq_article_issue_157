@@ -1,4 +1,4 @@
-
+stop("Use grid.expand")
 t <- tibble::tibble(
   mhc_class = c(1, 1, 1, 1, 2, 2, 2, 2),
   tool = c("PureseqTM", "PureseqTM", "TMHMM", "TMHMM", "PureseqTM", "PureseqTM", "TMHMM", "TMHMM"),
