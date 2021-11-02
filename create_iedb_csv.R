@@ -42,7 +42,6 @@ for (haplotype in haplotypes) {
     haplotype, "\\*([[:digit:]]{2})([[:digit:]]{2})", 
     "*\\1:\\2"
   )
-  haplotype
   message(i, "/", n_haplotypes, ": ", haplotype, ", which_cells: ", which_cells)
   params <- list(
     `structure_type` = 'eq.Linear peptide',
@@ -62,6 +61,12 @@ for (haplotype in haplotypes) {
   }
   res <- httr::GET(url = 'https://query-api.iedb.org/epitope_search', query = params)
   content <- httr::content(res)
+  if (!is.list(content)) stop("'content' must be a list")
+  if (length(content) == 0) {
+    message("No results for haplotype ", haplotype)
+    next
+  }
+  testthat::expect_true("linear_sequence" %in% names(content[[1]]))
   content
   linear_sequences <- purrr::map_chr(content, function(x) { x$linear_sequence } )
   are_mhc_binding_essays <- purrr::map_lgl(content, function(x) { "MHC binding assay" %in% x$mhc_allele_evidences } ) 
