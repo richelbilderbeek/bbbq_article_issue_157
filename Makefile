@@ -1,6 +1,7 @@
 all: results.csv \
      results.png \
-     results.tex
+     results.tex \
+     figure_2d.png
      # results.tiff \
 
 #
@@ -139,6 +140,10 @@ results.tiff: results.csv create_results_figure.R
 
 results.tex: results.csv create_results_tex.R
 	Rscript create_results_tex.R
+
+# https://github.com/richelbilderbeek/bbbq_article/issues/245
+figure_2d.png: results.csv create_figure_2d.R
+	Rscript create_figure_2d.R
 
 clean:
 	rm *.csv
