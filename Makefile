@@ -120,11 +120,13 @@ results.csv: tmhs_tmhmm_schellens_1.csv \
              tmhs_pureseqtm_bergseng_2.csv \
              tmhs_pureseqtm_iedb_b_cell_2.csv \
              tmhs_pureseqtm_iedb_t_cell_2.csv
+	Rscript create_results_csv.R
+# Add to rhs
 #             tmhs_tmhmm_iedb_mhc_ligand_1.csv \
 #             tmhs_tmhmm_iedb_mhc_ligand_2.csv \
 #             tmhs_pureseqtm_iedb_mhc_ligand_1.csv \
 #             tmhs_pureseqtm_iedb_mhc_ligand_2.csv \
-	Rscript create_results_csv.R
+
 
 results.png: results.csv
 	Rscript create_results_figure.R

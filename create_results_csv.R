@@ -1,13 +1,23 @@
-stop("Use grid.expand")
-t <- tibble::tibble(
-  mhc_class = c(1, 1, 1, 1, 2, 2, 2, 2),
-  tool = c("PureseqTM", "PureseqTM", "TMHMM", "TMHMM", "PureseqTM", "PureseqTM", "TMHMM", "TMHMM"),
-  dataset = c("schellens", "iedb", "schellens", "iedb", "bergseng", "iedb", "bergseng", "iedb"),
+t <- tidyr::expand_grid(
+  mhc_class = c(1, 2),
+  tool = c("PureseqTM", "TMHMM"),
+  dataset = c(
+    "schellens", 
+    "bergseng", 
+    "iedb_b_cell", 
+    # "iedb_mhc_ligand", 
+    "iedb_t_cell"
+  ),
   n = NA,     # Number of epitopes in proteome
   n_tmp = NA, # Number of epitopes in transmembrane protein
   n_tmh = NA, # Number of epitopes in transmembrane helix
   f_tmh = NA,
 )
+# Schellens is MHC-I only, remove MHC-II
+t <- t[!(t$dataset == "schellens" & t$mhc_class == 2), ]
+# Bergseng is MHC-II only, remove MHC-I
+t <- t[!(t$dataset == "bergseng" & t$mhc_class == 1), ]
+
 t
 testthat::expect_identical(t, dplyr::distinct(t))
 for (i in seq_len(nrow(t))) {
