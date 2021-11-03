@@ -5,10 +5,10 @@ t <- readr::read_csv(
 t$mhc_class <- as.character(as.roman(t$mhc_class))
 t$mhc_class <- as.factor(t$mhc_class)
 t$tool <- as.factor(t$tool)
-stop("Redo fig")
-t$dataset[t$dataset == "schellens"] <- "non_iedb"
-t$dataset[t$dataset == "bergseng"] <- "non_iedb"
 t$dataset <- as.factor(t$dataset)
+
+t <- t[!is.na(t$f_tmh), ]
+
 
 library(ggplot2)
 
@@ -23,7 +23,17 @@ p <- ggplot2::ggplot(t, ggplot2::aes(x = tool, y = f_tmh)) +
   ) +
   ggplot2::facet_grid(
     dataset ~ mhc_class,
-    labeller = ggplot2::as_labeller(c(I = "MHC-I", II = "MHC-II", iedb = "IEDB", non_iedb = "non-IEDB"))
+    labeller = ggplot2::as_labeller(
+      c(
+        I = "MHC-I", 
+        II = "MHC-II", 
+        bergseng = "Bergseng", 
+        schellens = "Schellens", 
+        iedb_b_cell = "IEDB,\nB cells", 
+        iedb_mhc_ligand = "IEDB,\nMHC ligands", 
+        iedb_t_cell = "IEDB,\nT cells"
+      )
+    )
   ) + bbbq::get_bbbq_theme() +
   ggplot2::theme(text = ggplot2::element_text(size = 24))
 p

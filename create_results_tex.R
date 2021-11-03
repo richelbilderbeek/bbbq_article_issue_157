@@ -2,6 +2,7 @@ t <- readr::read_csv(
   "results.csv",
   show_col_types = FALSE
 )
+t <- t[!is.na(t$f_tmh), ]
 
 # Pretty print
 t$mhc_class <- as.character(as.roman(t$mhc_class))

@@ -1,4 +1,7 @@
-all: results.csv results.tiff results.png results.tex iedb.csv
+all: results.csv \
+     results.png \
+     results.tex
+     # results.tiff \
 
 #
 # IEDB
@@ -128,13 +131,13 @@ results.csv: tmhs_tmhmm_schellens_1.csv \
 #             tmhs_pureseqtm_iedb_mhc_ligand_2.csv \
 
 
-results.png: results.csv
+results.png: results.csv create_results_figure.R
 	Rscript create_results_figure.R
 
-results.tiff: results.csv
+results.tiff: results.csv create_results_figure.R
 	Rscript create_results_figure.R
 
-results.tex: results.csv
+results.tex: results.csv create_results_tex.R
 	Rscript create_results_tex.R
 
 clean:
