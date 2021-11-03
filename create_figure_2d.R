@@ -52,6 +52,7 @@ t_is_tmh_derived_epitope_per_haplotype_1_and_2 <- merge(
 f_tmh_derived_epitope_per_haplotype_1_and_2 <- t_is_tmh_derived_epitope_per_haplotype_1_and_2 %>% 
   group_by(haplotype) %>%
   dplyr::summarize(
+    n_epitopes = n(),
     f_tmh_derived = mean(is_tmh_derived_epitope)
   )
 f_tmh_derived_epitope_per_haplotype_1_and_2
@@ -69,10 +70,15 @@ p <- ggplot2::ggplot(f_tmh_derived_epitope_per_haplotype_1_and_2,
   ggplot2::geom_col(fill = "#BBBBBB") +
   ggplot2::scale_y_continuous(
     "Epitopes derived from TMH",
-    labels = scales::percent
+    labels = scales::percent,
+    limits = c(0.0, 0.5)
   ) +
   ggplot2::scale_x_discrete(
     "MHC allele"
+  ) + ggplot2::geom_text(
+    ggplot2::aes(label = n_epitopes),
+    vjust = -0.5,
+    size = 8
   ) +
   ggplot2::facet_grid(
     . ~ mhc_class,
