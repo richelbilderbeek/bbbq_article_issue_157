@@ -57,12 +57,23 @@ for (haplotype in haplotypes) {
     params$tcell_ids <- 'not.is.null'
   } else {
     testthat::expect_equal(which_cells, "mhc_ligands")
+    #params$mhc_ids <- 'not.is.null'
+    #params$mhcligand_ids <- 'not.is.null'
+    #params$ligand_ids <- 'not.is.null'
     stop("Don't know yet")
-    params$mhc_ids <- 'not.is.null'
   }
   res <- httr::GET(url = 'https://query-api.iedb.org/epitope_search', query = params)
   content <- httr::content(res)
-  content
+  if ("message" %in% names(content)) {
+    if (
+        stringr::str_detect(
+        string = content$message,
+        pattern = "column .* does not exist"
+      )
+    ) {
+      stop("Does not exist")
+    }
+  }
   if (!is.list(content)) stop("'content' must be a list")
   if (length(content) == 0) {
     message("No results for haplotype ", haplotype)
