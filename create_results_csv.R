@@ -5,7 +5,7 @@ t <- tidyr::expand_grid(
     "schellens", 
     "bergseng", 
     "iedb_b_cell", 
-    # "iedb_mhc_ligand", 
+    "iedb_mhc_ligand", 
     "iedb_t_cell"
   ),
   n = NA,     # Number of epitopes in proteome
