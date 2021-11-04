@@ -43,26 +43,41 @@ for (haplotype in haplotypes) {
     "*\\1:\\2"
   )
   message(i, "/", n_haplotypes, ": ", haplotype, ", which_cells: ", which_cells)
-  params <- list(
-    `structure_type` = 'eq.Linear peptide',
-    `mhc_allele_names` = paste0("cs.{", haplotype, "}"),
-    `host_organism_iris` = 'cs.{NCBITaxon:9606}',
-    `source_organism_iris` = 'cs.{NCBITaxon:9606}',
-    `disease_names` = 'cs.{healthy}',
-    `order` = 'structure_iri'
-  )
   if (which_cells == "b_cells") {
+    params <- list(
+      `structure_type` = 'eq.Linear peptide',
+      `mhc_allele_names` = paste0("cs.{", haplotype, "}"),
+      `host_organism_iris` = 'cs.{NCBITaxon:9606}',
+      `source_organism_iris` = 'cs.{NCBITaxon:9606}',
+      `disease_names` = 'cs.{healthy}',
+      `order` = 'structure_iri'
+    )
     params$bcell_ids <- 'not.is.null'
+    res <- httr::GET(url = 'https://query-api.iedb.org/epitope_search', query = params)
   } else if (which_cells == "t_cells") {
+    params <- list(
+      `structure_type` = 'eq.Linear peptide',
+      `mhc_allele_names` = paste0("cs.{", haplotype, "}"),
+      `host_organism_iris` = 'cs.{NCBITaxon:9606}',
+      `source_organism_iris` = 'cs.{NCBITaxon:9606}',
+      `disease_names` = 'cs.{healthy}',
+      `order` = 'structure_iri'
+    )
     params$tcell_ids <- 'not.is.null'
+    res <- httr::GET(url = 'https://query-api.iedb.org/epitope_search', query = params)
   } else {
     testthat::expect_equal(which_cells, "mhc_ligands")
+    params <- list(
+      `structure_type` = 'eq.Linear peptide',
+      `disease_names` = 'cs.{healthy}',
+      `order` = 'structure_iri'
+    )
     #params$mhc_ids <- 'not.is.null'
     #params$mhcligand_ids <- 'not.is.null'
     #params$ligand_ids <- 'not.is.null'
-    stop("Don't know yet")
+    # stop("Don't know yet")
+    res <- httr::GET(url = 'https://query-api.iedb.org/mhc_search', query = params)
   }
-  res <- httr::GET(url = 'https://query-api.iedb.org/epitope_search', query = params)
   content <- httr::content(res)
   if ("message" %in% names(content)) {
     if (
@@ -80,13 +95,17 @@ for (haplotype in haplotypes) {
     next
   }
   testthat::expect_true("linear_sequence" %in% names(content[[1]]))
-  content
+  names(content[[1]])
   linear_sequences <- purrr::map_chr(content, function(x) { x$linear_sequence } )
-  are_mhc_binding_essays <- purrr::map_lgl(content, function(x) { "MHC binding assay" %in% x$mhc_allele_evidences } ) 
-  testthat::expect_equal(length(linear_sequences), length(are_mhc_binding_essays))
+  head(linear_sequences)
   t <- tibble::tibble(linear_sequence = linear_sequences)
-  t <- t[are_mhc_binding_essays, ]
-  testthat::expect_equal(nrow(t), sum(are_mhc_binding_essays))
+  if (which_cells == "b_cells" || which_cells == "t_cells")  {
+    are_mhc_binding_essays <- purrr::map_lgl(content, function(x) { "MHC binding assay" %in% x$mhc_allele_evidences } ) 
+    head(are_mhc_binding_essays)
+    testthat::expect_equal(length(linear_sequences), length(are_mhc_binding_essays))
+    t <- t[are_mhc_binding_essays, ]
+    testthat::expect_equal(nrow(t), sum(are_mhc_binding_essays))
+  }
   t <- dplyr::distinct(t)
   t$haplotype <- haplotype 
   t$cell_type <- which_cells 
