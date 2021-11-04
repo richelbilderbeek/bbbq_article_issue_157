@@ -7,10 +7,11 @@ if (1 == 2) {
   list.files()
   args <- c("iedb_b_cell")
   args <- c("iedb_t_cell")
-  args <- c("iedb_mhc_ligand")
+  args <- c("iedb_mhc_ligand", "per_allele")
+  args <- c("iedb_mhc_ligand", "all_alleles")
 }
 message("args: {", paste0(args, collapse = ", "), "}")
-testthat::expect_equal(length(args), 1)
+testthat::expect_equal(length(args), 2)
 dataset <- as.character(args[1])
 message("dataset: ", dataset)
 testthat::expect_true(
@@ -18,8 +19,11 @@ testthat::expect_true(
     "schellens", "bergseng", "iedb_b_cell", "iedb_t_cell","iedb_mhc_ligand"
   )
 )
+allele_set <- as.character(args[2])
+testthat::expect_true(allele_set %in% c("per_allele", "all_alleles"))
+message("allele_set: ", allele_set)
 
-output_filename <- paste0(dataset, ".csv")
+output_filename <- paste0(dataset, "_", allele_set, ".csv")
 message("output_filename: ", output_filename)
 
 which_cells <- NA
@@ -34,7 +38,7 @@ message("which_cells: ", which_cells)
 tibbles <- list()
 i <- 1
 haplotypes <- bbbq::get_mhc_haplotypes()
-# if (dataset == "iedb_mhc_ligand") haplotypes <- "irrelevant"
+if (allele_set == "all_alleles") haplotypes <- "all"
 n_haplotypes <- length(haplotypes)
 
 for (haplotype in haplotypes) {
@@ -47,23 +51,27 @@ for (haplotype in haplotypes) {
   if (which_cells == "b_cells") {
     params <- list(
       `structure_type` = 'eq.Linear peptide',
-      `mhc_allele_names` = paste0("cs.{", haplotype, "}"),
       `host_organism_iris` = 'cs.{NCBITaxon:9606}',
       `source_organism_iris` = 'cs.{NCBITaxon:9606}',
       `disease_names` = 'cs.{healthy}',
       `order` = 'structure_iri'
     )
+    if (allele_set == "per_allele") {
+      params$mhc_allele_names <- paste0("cs.{", haplotype, "}")
+    }
     params$bcell_ids <- 'not.is.null'
     res <- httr::GET(url = 'https://query-api.iedb.org/epitope_search', query = params)
   } else if (which_cells == "t_cells") {
     params <- list(
       `structure_type` = 'eq.Linear peptide',
-      `mhc_allele_names` = paste0("cs.{", haplotype, "}"),
       `host_organism_iris` = 'cs.{NCBITaxon:9606}',
       `source_organism_iris` = 'cs.{NCBITaxon:9606}',
       `disease_names` = 'cs.{healthy}',
       `order` = 'structure_iri'
     )
+    if (allele_set == "per_allele") {
+      params$mhc_allele_names <- paste0("cs.{", haplotype, "}")
+    }
     params$tcell_ids <- 'not.is.null'
     res <- httr::GET(url = 'https://query-api.iedb.org/epitope_search', query = params)
   } else {
@@ -73,10 +81,6 @@ for (haplotype in haplotypes) {
       `disease_names` = 'cs.{healthy}',
       `order` = 'structure_iri'
     )
-    #params$mhc_ids <- 'not.is.null'
-    #params$mhcligand_ids <- 'not.is.null'
-    #params$ligand_ids <- 'not.is.null'
-    # stop("Don't know yet")
     res <- httr::GET(url = 'https://query-api.iedb.org/mhc_search', query = params)
   }
   content <- httr::content(res)
@@ -96,9 +100,7 @@ for (haplotype in haplotypes) {
     next
   }
   testthat::expect_true("linear_sequence" %in% names(content[[1]]))
-  names(content[[1]])
   linear_sequences <- purrr::map_chr(content, function(x) { x$linear_sequence } )
-  head(linear_sequences)
   t <- tibble::tibble(linear_sequence = linear_sequences)
   if (which_cells == "b_cells" || which_cells == "t_cells")  {
     are_mhc_binding_essays <- purrr::map_lgl(content, function(x) { "MHC binding assay" %in% x$mhc_allele_evidences } ) 
@@ -108,9 +110,11 @@ for (haplotype in haplotypes) {
     testthat::expect_equal(nrow(t), sum(are_mhc_binding_essays))
   } else {
     testthat::expect_equal(which_cells, "mhc_ligands")
-    is_correct_haplotype <- purrr::map_lgl(content, function(x) {  haplotype == x$mhc_allele_name } ) 
-    t <- t[is_correct_haplotype, ]
-    testthat::expect_equal(nrow(t), sum(is_correct_haplotype))
+    if (allele_set == "per_allele") {
+      is_correct_haplotype <- purrr::map_lgl(content, function(x) {  haplotype == x$mhc_allele_name } ) 
+      t <- t[is_correct_haplotype, ]
+      testthat::expect_equal(nrow(t), sum(is_correct_haplotype))
+    }
   }
   t <- dplyr::distinct(t)
   t$haplotype <- haplotype 
