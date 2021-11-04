@@ -13,8 +13,8 @@ iedb_b_cell.csv: create_iedb_csv.R
 iedb_t_cell.csv: create_iedb_csv.R
 	Rscript create_iedb_csv.R iedb_t_cell
 
-#iedb_mhc_ligand.csv: create_iedb_csv.R
-#	Rscript create_iedb_csv.R iedb_mhc_ligand
+iedb_mhc_ligand.csv: create_iedb_csv.R
+	Rscript create_iedb_csv.R iedb_mhc_ligand
 
 #
 # matches
@@ -39,8 +39,8 @@ matches_bergseng_2.csv: create_matches_csv.R
 matches_iedb_b_cell_1.csv: iedb_b_cell.csv create_matches_csv.R
 	Rscript create_matches_csv.R 1 iedb_b_cell
 
-#matches_iedb_mhc_ligand_1.csv: iedb_mhc_ligand.csv create_matches_csv.R
-#	Rscript create_matches_csv.R 1 iedb_mhc_ligand
+matches_iedb_mhc_ligand_1.csv: iedb_mhc_ligand.csv create_matches_csv.R
+	Rscript create_matches_csv.R 1 iedb_mhc_ligand
 
 matches_iedb_t_cell_1.csv: iedb_t_cell.csv create_matches_csv.R
 	Rscript create_matches_csv.R 1 iedb_t_cell
@@ -48,8 +48,8 @@ matches_iedb_t_cell_1.csv: iedb_t_cell.csv create_matches_csv.R
 matches_iedb_b_cell_2.csv: iedb_b_cell.csv create_matches_csv.R
 	Rscript create_matches_csv.R 2 iedb_b_cell
 
-#matches_iedb_mhc_ligand_2.csv: iedb_mhc_ligand.csv create_matches_csv.R
-#	Rscript create_matches_csv.R 2 iedb_mhc_ligand
+matches_iedb_mhc_ligand_2.csv: iedb_mhc_ligand.csv create_matches_csv.R
+	Rscript create_matches_csv.R 2 iedb_mhc_ligand
 
 matches_iedb_t_cell_2.csv: iedb_t_cell.csv create_matches_csv.R
 	Rscript create_matches_csv.R 2 iedb_t_cell
@@ -63,8 +63,8 @@ tmhs_tmhmm_schellens_1.csv: matches_schellens_1.csv
 tmhs_tmhmm_iedb_b_cell_1.csv: matches_iedb_b_cell_1.csv
 	Rscript create_tmhs_tmhmm_csv.R 1 iedb_b_cell
 
-#tmhs_tmhmm_iedb_mhc_ligand_1.csv: matches_iedb_mhc_ligand_1.csv
-#	Rscript create_tmhs_tmhmm_csv.R 1 iedb_mhc_ligand
+tmhs_tmhmm_iedb_mhc_ligand_1.csv: matches_iedb_mhc_ligand_1.csv
+	Rscript create_tmhs_tmhmm_csv.R 1 iedb_mhc_ligand
 
 tmhs_tmhmm_iedb_t_cell_1.csv: matches_iedb_t_cell_1.csv
 	Rscript create_tmhs_tmhmm_csv.R 1 iedb_t_cell
@@ -75,8 +75,8 @@ tmhs_tmhmm_bergseng_2.csv: matches_bergseng_2.csv
 tmhs_tmhmm_iedb_b_cell_2.csv: matches_iedb_b_cell_2.csv
 	Rscript create_tmhs_tmhmm_csv.R 2 iedb_b_cell
 
-#tmhs_tmhmm_iedb_mhc_ligand_2.csv: matches_iedb_mhc_ligand_2.csv
-#	Rscript create_tmhs_tmhmm_csv.R 2 iedb_mhc_ligand
+tmhs_tmhmm_iedb_mhc_ligand_2.csv: matches_iedb_mhc_ligand_2.csv
+	Rscript create_tmhs_tmhmm_csv.R 2 iedb_mhc_ligand
 
 tmhs_tmhmm_iedb_t_cell_2.csv: matches_iedb_t_cell_2.csv
 	Rscript create_tmhs_tmhmm_csv.R 2 iedb_t_cell
@@ -91,8 +91,8 @@ tmhs_pureseqtm_schellens_1.csv: matches_schellens_1.csv
 tmhs_pureseqtm_iedb_b_cell_1.csv: matches_iedb_b_cell_1.csv
 	Rscript create_tmhs_pureseqtm_csv.R 1 iedb_b_cell
 
-#tmhs_pureseqtm_iedb_mhc_ligand_1.csv: matches_iedb_mhc_ligand_1.csv
-#	Rscript create_tmhs_pureseqtm_csv.R 1 iedb_mhc_ligand
+tmhs_pureseqtm_iedb_mhc_ligand_1.csv: matches_iedb_mhc_ligand_1.csv
+	Rscript create_tmhs_pureseqtm_csv.R 1 iedb_mhc_ligand
 
 tmhs_pureseqtm_iedb_t_cell_1.csv: matches_iedb_t_cell_1.csv
 	Rscript create_tmhs_pureseqtm_csv.R 1 iedb_t_cell
@@ -103,8 +103,8 @@ tmhs_pureseqtm_bergseng_2.csv: matches_bergseng_2.csv
 tmhs_pureseqtm_iedb_b_cell_2.csv: matches_iedb_b_cell_2.csv
 	Rscript create_tmhs_pureseqtm_csv.R 2 iedb_b_cell
 
-#tmhs_pureseqtm_iedb_mhc_ligand_2.csv: matches_iedb_mhc_ligand_2.csv
-#	Rscript create_tmhs_pureseqtm_csv.R 2 iedb_mhc_ligand
+tmhs_pureseqtm_iedb_mhc_ligand_2.csv: matches_iedb_mhc_ligand_2.csv
+	Rscript create_tmhs_pureseqtm_csv.R 2 iedb_mhc_ligand
 
 tmhs_pureseqtm_iedb_t_cell_2.csv: matches_iedb_t_cell_2.csv
 	Rscript create_tmhs_pureseqtm_csv.R 2 iedb_t_cell
@@ -118,6 +118,10 @@ results.csv: tmhs_tmhmm_schellens_1.csv \
              tmhs_tmhmm_bergseng_2.csv \
              tmhs_tmhmm_iedb_b_cell_2.csv \
              tmhs_tmhmm_iedb_t_cell_2.csv \
+             tmhs_tmhmm_iedb_mhc_ligand_1.csv \
+             tmhs_tmhmm_iedb_mhc_ligand_2.csv \
+             tmhs_pureseqtm_iedb_mhc_ligand_1.csv \
+             tmhs_pureseqtm_iedb_mhc_ligand_2.csv \
              tmhs_pureseqtm_schellens_1.csv \
              tmhs_pureseqtm_iedb_b_cell_1.csv \
              tmhs_pureseqtm_iedb_t_cell_1.csv \
@@ -125,11 +129,6 @@ results.csv: tmhs_tmhmm_schellens_1.csv \
              tmhs_pureseqtm_iedb_b_cell_2.csv \
              tmhs_pureseqtm_iedb_t_cell_2.csv
 	Rscript create_results_csv.R
-# Add to rhs
-#             tmhs_tmhmm_iedb_mhc_ligand_1.csv \
-#             tmhs_tmhmm_iedb_mhc_ligand_2.csv \
-#             tmhs_pureseqtm_iedb_mhc_ligand_1.csv \
-#             tmhs_pureseqtm_iedb_mhc_ligand_2.csv \
 
 
 results.png: results.csv create_results_figure.R

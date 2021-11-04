@@ -34,6 +34,7 @@ message("which_cells: ", which_cells)
 tibbles <- list()
 i <- 1
 haplotypes <- bbbq::get_mhc_haplotypes()
+# if (dataset == "iedb_mhc_ligand") haplotypes <- "irrelevant"
 n_haplotypes <- length(haplotypes)
 
 for (haplotype in haplotypes) {
@@ -105,6 +106,11 @@ for (haplotype in haplotypes) {
     testthat::expect_equal(length(linear_sequences), length(are_mhc_binding_essays))
     t <- t[are_mhc_binding_essays, ]
     testthat::expect_equal(nrow(t), sum(are_mhc_binding_essays))
+  } else {
+    testthat::expect_equal(which_cells, "mhc_ligands")
+    is_correct_haplotype <- purrr::map_lgl(content, function(x) {  haplotype == x$mhc_allele_name } ) 
+    t <- t[is_correct_haplotype, ]
+    testthat::expect_equal(nrow(t), sum(is_correct_haplotype))
   }
   t <- dplyr::distinct(t)
   t$haplotype <- haplotype 
