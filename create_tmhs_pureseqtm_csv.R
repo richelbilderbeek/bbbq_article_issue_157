@@ -2,12 +2,12 @@ args <- commandArgs(trailingOnly = TRUE)
 message("args: {", paste0(args, collapse = ", "), "}")
 
 if (1 == 2) {
-  args <- c("1", "schellens")
-  args <- c("1", "iedb_mhc_ligand")
-  args <- c("2", "bergseng")
-  args <- c("2", "iedb_t_cell")
+  args <- c("1", "schellens", "all_alleles")
+  args <- c("2", "bergseng", "all_alleles")
+  args <- c("1", "iedb_mhc_ligand", "all_alleles")
+  args <- c("2", "iedb_t_cell", "all_alleles")
 }
-testthat::expect_equal(length(args), 2)
+testthat::expect_equal(length(args), 3)
 mhc_class <- as.numeric(args[1])
 message("mhc_class: ", mhc_class)
 mhc_class <- as.numeric(args[1])
@@ -26,14 +26,18 @@ testthat::expect_true(
 testthat::expect_true(dataset != "schellens" || mhc_class == 1) # Schellens is MHC-I
 testthat::expect_true(dataset != "bergseng" || mhc_class == 2) # Bergseng is MHC-II
 
-matches_csv_filename <- paste0("matches_", dataset, "_", mhc_class, ".csv")
+allele_set <- as.character(args[3])
+testthat::expect_true(allele_set %in% c("per_allele", "all_alleles"))
+message("allele_set: ", allele_set)
+
+matches_csv_filename <- paste0("matches_", dataset, "_", allele_set, "_", mhc_class, ".csv")
 message(
   "matches_csv_filename: ", matches_csv_filename,
   " (this is the source file)"
 )
 testthat::expect_true(file.exists(matches_csv_filename))
 
-tmhs_pureseqtm_filename <- paste0("tmhs_pureseqtm_", dataset, "_", mhc_class, ".csv")
+tmhs_pureseqtm_filename <- paste0("tmhs_pureseqtm_", dataset, "_", allele_set, "_", mhc_class, ".csv")
 message(
   "tmhs_pureseqtm_filename: ", tmhs_pureseqtm_filename,
   " (this is the output file)"

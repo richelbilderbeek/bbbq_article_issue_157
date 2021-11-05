@@ -5,13 +5,14 @@ message("args: {", paste0(args, collapse = ", "), "}")
 
 if (1 == 2) {
   setwd("~/GitHubs/bbbq_article_issue_157"); list.files()
-  args <- c("1", "schellens")
-  args <- c("2", "bergseng")
-  args <- c("1", "iedb_b_cell")
-  args <- c("1", "iedb_mhc_ligand")
-  args <- c("2", "iedb_t_cell")
+  args <- c("1", "schellens", "all_alleles")
+  args <- c("2", "bergseng", "all_alleles")
+  args <- c("1", "iedb_b_cell", "all_alleles")
+  args <- c("1", "iedb_mhc_ligand", "all_alleles")
+  args <- c("2", "iedb_t_cell", "per_allele")
+  args <- c("2", "iedb_t_cell", "all_alleles")
 }
-testthat::expect_equal(length(args), 2)
+testthat::expect_equal(length(args), 3)
 mhc_class <- as.numeric(args[1])
 message("mhc_class: ", mhc_class)
 mhc_class <- as.numeric(args[1])
@@ -30,7 +31,11 @@ testthat::expect_true(
 testthat::expect_true(dataset != "schellens" || mhc_class == 1) # Schellens is MHC-I
 testthat::expect_true(dataset != "bergseng" || mhc_class == 2) # Bergseng is MHC-II
 
-matches_csv_filename <- paste0("matches_", dataset, "_", mhc_class, ".csv")
+allele_set <- as.character(args[3])
+testthat::expect_true(allele_set %in% c("per_allele", "all_alleles"))
+message("allele_set: ", allele_set)
+
+matches_csv_filename <- paste0("matches_", dataset, "_", allele_set, "_", mhc_class, ".csv")
 message(
   "matches_csv_filename: ", matches_csv_filename,
   " (this is the file to be created)"
@@ -82,8 +87,9 @@ get_epitope_sequences_bergseng_2 <- function() {
 }
 
 #' @return a character vector of epitope sequences
-get_epitope_sequences_iedb <- function(dataset, mhc_class) {
-  filename <- paste0(dataset, ".csv")
+get_epitope_sequences_iedb <- function(dataset, mhc_class, allele_set) {
+  filename <- paste0(dataset, "_", allele_set, ".csv")
+  message("Reading file: ", filename)
   t <- readr::read_csv(
     filename,
     col_types = readr::cols(
@@ -92,11 +98,13 @@ get_epitope_sequences_iedb <- function(dataset, mhc_class) {
       cell_type = readr::col_character() 
     )
   )
+  message("Number of sequences in file ", filename, ": ", nrow(t))
   haplotypes <- NA
   if (mhc_class == 1) haplotypes <- bbbq::get_mhc1_haplotypes()
   if (mhc_class == 2) haplotypes <- bbbq::get_mhc2_haplotypes()
   testthat::expect_true(all(!is.na(haplotypes)))
   t <- t[t$haplotype %in% haplotypes, ]
+  message("Number of sequences in file with MHC class ", mhc_class, ": ", nrow(t))
   epitope_sequences <- t$linear_sequence
   epitope_sequences
 }
@@ -107,7 +115,11 @@ if (mhc_class == 1 && dataset == "schellens") {
 } else if (mhc_class == 2 && dataset == "bergseng") {
   epitope_sequences <- get_epitope_sequences_bergseng_2()
 } else {
-  epitope_sequences <- get_epitope_sequences_iedb(dataset, mhc_class)
+  epitope_sequences <- get_epitope_sequences_iedb(
+    dataset = dataset, 
+    mhc_class = mhc_class,
+    allele_set = allele_set
+  )
 }
 
 t_matches <- tibble::tibble(
