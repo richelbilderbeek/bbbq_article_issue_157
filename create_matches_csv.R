@@ -122,6 +122,10 @@ if (mhc_class == 1 && dataset == "schellens") {
   )
 }
 
+if (mhc_class == 2 && dataset == "iedb_t_cell" && allele_set == "all_alleles") {
+  testthat::expect_equal(length(epitope_sequences), 921)
+}
+
 t_matches <- tibble::tibble(
   epitope_sequence = epitope_sequences,
   n_matches = NA,

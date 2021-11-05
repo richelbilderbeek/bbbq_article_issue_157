@@ -5,13 +5,15 @@ args <- commandArgs(trailingOnly = TRUE)
 if (1 == 2) {
   setwd("~/GitHubs/bbbq_article_issue_157")
   list.files()
-  args <- c("iedb_b_cell")
-  args <- c("iedb_t_cell")
-  args <- c("iedb_mhc_ligand", "per_allele")
-  args <- c("iedb_mhc_ligand", "all_alleles")
+  args <- c("iedb_b_cell", "per_allele", 2)
+  args <- c("iedb_t_cell", "per_allele", 1)
+  args <- c("iedb_mhc_ligand", "all_alleles", 1)
+  args <- c("iedb_mhc_ligand", "all_alleles", 2)
+  args <- c("iedb_b_cell", "all_alleles", 1)
+  args <- c("iedb_mhc_ligand", "per_allele", 2)
 }
 message("args: {", paste0(args, collapse = ", "), "}")
-testthat::expect_equal(length(args), 2)
+testthat::expect_equal(length(args), 3)
 dataset <- as.character(args[1])
 message("dataset: ", dataset)
 testthat::expect_true(
@@ -23,7 +25,11 @@ allele_set <- as.character(args[2])
 testthat::expect_true(allele_set %in% c("per_allele", "all_alleles"))
 message("allele_set: ", allele_set)
 
-output_filename <- paste0(dataset, "_", allele_set, ".csv")
+mhc_class <- as.numeric(args[3])
+message("mhc_class: ", mhc_class)
+testthat::expect_true(mhc_class %in% c(1, 2))
+
+output_filename <- paste0(dataset, "_", allele_set, "_", mhc_class, ".csv")
 message("output_filename: ", output_filename)
 
 which_cells <- NA
@@ -37,17 +43,25 @@ message("which_cells: ", which_cells)
   
 tibbles <- list()
 i <- 1
-haplotypes <- bbbq::get_mhc_haplotypes()
+haplotypes <- NA
+if (mhc_class == 1) haplotypes <- bbbq::get_mhc1_haplotypes()
+if (mhc_class == 2) haplotypes <- bbbq::get_mhc2_haplotypes()
 if (allele_set == "all_alleles") haplotypes <- "all"
 n_haplotypes <- length(haplotypes)
 
 for (haplotype in haplotypes) {
   # Use the IEDB names
+  # Don't need in new BBBQ version
   haplotype <- stringr::str_replace_all(
     haplotype, "\\*([[:digit:]]{2})([[:digit:]]{2})", 
     "*\\1:\\2"
   )
-  message(i, "/", n_haplotypes, ": ", haplotype, ", which_cells: ", which_cells)
+  message(
+    i, "/", n_haplotypes, ": ",
+    "haplotype: ", haplotype, ", ",
+    "which_cells: ", which_cells, ", ",
+    "mhc_class: ", mhc_class
+  )
   if (which_cells == "b_cells") {
     params <- list(
       `structure_type` = 'eq.Linear peptide',
@@ -58,6 +72,8 @@ for (haplotype in haplotypes) {
     )
     if (allele_set == "per_allele") {
       params$mhc_allele_names <- paste0("cs.{", haplotype, "}")
+    } else {
+      # Will filter out the correct MHC class later
     }
     params$bcell_ids <- 'not.is.null'
     res <- httr::GET(url = 'https://query-api.iedb.org/epitope_search', query = params)
@@ -71,6 +87,8 @@ for (haplotype in haplotypes) {
     )
     if (allele_set == "per_allele") {
       params$mhc_allele_names <- paste0("cs.{", haplotype, "}")
+    } else {
+      # Will filter out the correct MHC class later
     }
     params$tcell_ids <- 'not.is.null'
     res <- httr::GET(url = 'https://query-api.iedb.org/epitope_search', query = params)
@@ -84,6 +102,7 @@ for (haplotype in haplotypes) {
     res <- httr::GET(url = 'https://query-api.iedb.org/mhc_search', query = params)
   }
   content <- httr::content(res)
+  message("Found ", length(content), " candidates")
   if ("message" %in% names(content)) {
     if (
         stringr::str_detect(
@@ -103,17 +122,27 @@ for (haplotype in haplotypes) {
   linear_sequences <- purrr::map_chr(content, function(x) { x$linear_sequence } )
   t <- tibble::tibble(linear_sequence = linear_sequences)
   if (which_cells == "b_cells" || which_cells == "t_cells")  {
-    are_mhc_binding_essays <- purrr::map_lgl(content, function(x) { "MHC binding assay" %in% x$mhc_allele_evidences } ) 
-    head(are_mhc_binding_essays)
-    testthat::expect_equal(length(linear_sequences), length(are_mhc_binding_essays))
-    t <- t[are_mhc_binding_essays, ]
-    testthat::expect_equal(nrow(t), sum(are_mhc_binding_essays))
+    # Do not check for MHC binding assays
+    # content[[1]]
+    # are_mhc_binding_essays <- purrr::map_lgl(content, function(x) { "MHC binding assay" %in% x$mhc_allele_evidences } ) 
+    # head(are_mhc_binding_essays)
+    # testthat::expect_equal(length(linear_sequences), length(are_mhc_binding_essays))
+    # t <- t[are_mhc_binding_essays, ]
+    # testthat::expect_equal(nrow(t), sum(are_mhc_binding_essays))
   } else {
     testthat::expect_equal(which_cells, "mhc_ligands")
     if (allele_set == "per_allele") {
       is_correct_haplotype <- purrr::map_lgl(content, function(x) {  haplotype == x$mhc_allele_name } ) 
+      message("Candidates with correct haplotype: ", sum(is_correct_haplotype))
       t <- t[is_correct_haplotype, ]
       testthat::expect_equal(nrow(t), sum(is_correct_haplotype))
+    } else {
+      testthat::expect_equal(allele_set, "all_alleles")
+      # content[[1]]$mhc_class
+      # as.character(as.roman(mhc_class)) == content[[1]]$mhc_class
+      is_correct_mhc_class <- purrr::map_lgl(content, function(x) {  as.character(as.roman(mhc_class)) == x$mhc_class } ) 
+      t <- t[is_correct_mhc_class, ]
+      testthat::expect_equal(nrow(t), sum(is_correct_mhc_class))
     }
   }
   t <- dplyr::distinct(t)
