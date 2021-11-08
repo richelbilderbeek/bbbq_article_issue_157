@@ -56,6 +56,10 @@ jobs:
         run: remotes::install_github("richelbilderbeek/mhcnpreds")
         shell: Rscript {0}
 
+      - name: Install iedbr
+        run: remotes::install_github("richelbilderbeek/iedbr")
+        shell: Rscript {0}
+
       - name: Install Biostrings
         run: remotes::install_bioc("Biostrings")
         shell: Rscript {0}

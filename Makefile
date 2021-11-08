@@ -74,6 +74,7 @@ matches_schellens_all_alleles_1.csv: create_matches_csv.R
 	Rscript -e 'remotes::install_bioc("Biostrings")'
 	Rscript -e 'remotes::install_github("richelbilderbeek/bbbq")'
 	Rscript -e 'remotes::install_github("richelbilderbeek/bianchi_et_al_2017")'
+	Rscript -e 'remotes::install_github("richelbilderbeek/iedbr")'
 	Rscript create_matches_csv.R 1 schellens all_alleles
 
 matches_bergseng_all_alleles_2.csv: create_matches_csv.R

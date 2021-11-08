@@ -62,87 +62,118 @@ for (haplotype in haplotypes) {
     "which_cells: ", which_cells, ", ",
     "mhc_class: ", mhc_class
   )
+  epitopes <- c()
   if (which_cells == "b_cells") {
-    params <- list(
-      `structure_type` = 'eq.Linear peptide',
-      `host_organism_iris` = 'cs.{NCBITaxon:9606}',
-      `source_organism_iris` = 'cs.{NCBITaxon:9606}',
-      `disease_names` = 'cs.{healthy}',
-      `order` = 'structure_iri'
-    )
-    if (allele_set == "per_allele") {
-      params$mhc_allele_names <- paste0("cs.{", haplotype, "}")
+    if (haplotype == "all") {
+      epitopes <- iedbr::get_all_b_cell_epitopes()
     } else {
-      # Will filter out the correct MHC class later
-    }
-    params$bcell_ids <- 'not.is.null'
-    res <- httr::GET(url = 'https://query-api.iedb.org/epitope_search', query = params)
-  } else if (which_cells == "t_cells") {
-    params <- list(
-      `structure_type` = 'eq.Linear peptide',
-      `host_organism_iris` = 'cs.{NCBITaxon:9606}',
-      `source_organism_iris` = 'cs.{NCBITaxon:9606}',
-      `disease_names` = 'cs.{healthy}',
-      `order` = 'structure_iri'
-    )
-    if (allele_set == "per_allele") {
-      params$mhc_allele_names <- paste0("cs.{", haplotype, "}")
-    } else {
-      # Will filter out the correct MHC class later
-    }
-    params$tcell_ids <- 'not.is.null'
-    res <- httr::GET(url = 'https://query-api.iedb.org/epitope_search', query = params)
-  } else {
-    testthat::expect_equal(which_cells, "mhc_ligands")
-    params <- list(
-      `structure_type` = 'eq.Linear peptide',
-      `disease_names` = 'cs.{healthy}',
-      `order` = 'structure_iri'
-    )
-    res <- httr::GET(url = 'https://query-api.iedb.org/mhc_search', query = params)
-  }
-  content <- httr::content(res)
-  message("Found ", length(content), " candidates")
-  if ("message" %in% names(content)) {
-    if (
-        stringr::str_detect(
-        string = content$message,
-        pattern = "column .* does not exist"
+      epitopes <- iedbr::get_all_b_cell_epitopes(
+        mhc_allele_names = paste0("cs.{", haplotype,"}")
       )
-    ) {
-      stop("Does not exist")
     }
   }
-  if (!is.list(content)) stop("'content' must be a list")
-  if (length(content) == 0) {
-    message("No results for haplotype ", haplotype)
-    next
-  }
-  testthat::expect_true("linear_sequence" %in% names(content[[1]]))
-  linear_sequences <- purrr::map_chr(content, function(x) { x$linear_sequence } )
-  t <- tibble::tibble(linear_sequence = linear_sequences)
-  if (which_cells == "b_cells" || which_cells == "t_cells")  {
-    # Do not check for MHC binding assays
-    # content[[1]]
-    # are_mhc_binding_essays <- purrr::map_lgl(content, function(x) { "MHC binding assay" %in% x$mhc_allele_evidences } ) 
-    # head(are_mhc_binding_essays)
-    # testthat::expect_equal(length(linear_sequences), length(are_mhc_binding_essays))
-    # t <- t[are_mhc_binding_essays, ]
-    # testthat::expect_equal(nrow(t), sum(are_mhc_binding_essays))
-  } else {
-    testthat::expect_equal(which_cells, "mhc_ligands")
-    if (allele_set == "per_allele") {
-      is_correct_haplotype <- purrr::map_lgl(content, function(x) {  haplotype == x$mhc_allele_name } ) 
-      message("Candidates with correct haplotype: ", sum(is_correct_haplotype))
-      t <- t[is_correct_haplotype, ]
-      testthat::expect_equal(nrow(t), sum(is_correct_haplotype))
+  if (which_cells == "mhc_ligands") {
+    if (haplotype == "all") {
+      epitopes <- iedbr::get_all_mhc_ligand_epitopes()
     } else {
-      testthat::expect_equal(allele_set, "all_alleles")
-      # content[[1]]$mhc_class
-      # as.character(as.roman(mhc_class)) == content[[1]]$mhc_class
-      is_correct_mhc_class <- purrr::map_lgl(content, function(x) {  as.character(as.roman(mhc_class)) == x$mhc_class } ) 
-      t <- t[is_correct_mhc_class, ]
-      testthat::expect_equal(nrow(t), sum(is_correct_mhc_class))
+      epitopes <- iedbr::get_all_mhc_ligand_epitopes(
+        mhc_allele_name = paste0("cs.{", haplotype,"}")
+      )
+    }
+  }
+  if (which_cells == "t_cells") {
+    if (haplotype == "all") {
+      epitopes <- iedbr::get_all_t_cell_epitopes()
+    } else {
+      epitopes <- iedbr::get_all_t_cell_epitopes(
+        mhc_allele_names = paste0("cs.{", haplotype,"}")
+      )
+    }
+  }
+  testthat::expect_true(length(epitopes) != 0)
+  if (1 == 2) {
+    if (which_cells == "b_cells") {
+      params <- list(
+        `structure_type` = 'eq.Linear peptide',
+        `host_organism_iris` = 'cs.{NCBITaxon:9606}',
+        `source_organism_iris` = 'cs.{NCBITaxon:9606}',
+        `disease_names` = 'cs.{healthy}',
+        `order` = 'structure_iri'
+      )
+      if (allele_set == "per_allele") {
+        params$mhc_allele_names <- paste0("cs.{", haplotype, "}")
+      } else {
+        # Will filter out the correct MHC class later
+      }
+      params$bcell_ids <- 'not.is.null'
+      res <- httr::GET(url = 'https://query-api.iedb.org/epitope_search', query = params)
+    } else if (which_cells == "t_cells") {
+      params <- list(
+        `structure_type` = 'eq.Linear peptide',
+        `host_organism_iris` = 'cs.{NCBITaxon:9606}',
+        `source_organism_iris` = 'cs.{NCBITaxon:9606}',
+        `disease_names` = 'cs.{healthy}',
+        `order` = 'structure_iri'
+      )
+      if (allele_set == "per_allele") {
+        params$mhc_allele_names <- paste0("cs.{", haplotype, "}")
+      } else {
+        # Will filter out the correct MHC class later
+      }
+      params$tcell_ids <- 'not.is.null'
+      res <- httr::GET(url = 'https://query-api.iedb.org/epitope_search', query = params)
+    } else {
+      testthat::expect_equal(which_cells, "mhc_ligands")
+      params <- list(
+        `structure_type` = 'eq.Linear peptide',
+        `disease_names` = 'cs.{healthy}',
+        `order` = 'structure_iri'
+      )
+      res <- httr::GET(url = 'https://query-api.iedb.org/mhc_search', query = params)
+    }
+    content <- httr::content(res)
+    message("Found ", length(content), " candidates")
+    if ("message" %in% names(content)) {
+      if (
+          stringr::str_detect(
+          string = content$message,
+          pattern = "column .* does not exist"
+        )
+      ) {
+        stop("Does not exist")
+      }
+    }
+    if (!is.list(content)) stop("'content' must be a list")
+    if (length(content) == 0) {
+      message("No results for haplotype ", haplotype)
+      next
+    }
+    testthat::expect_true("linear_sequence" %in% names(content[[1]]))
+    linear_sequences <- purrr::map_chr(content, function(x) { x$linear_sequence } )
+    t <- tibble::tibble(linear_sequence = linear_sequences)
+    if (which_cells == "b_cells" || which_cells == "t_cells")  {
+      # Do not check for MHC binding assays
+      # content[[1]]
+      # are_mhc_binding_essays <- purrr::map_lgl(content, function(x) { "MHC binding assay" %in% x$mhc_allele_evidences } ) 
+      # head(are_mhc_binding_essays)
+      # testthat::expect_equal(length(linear_sequences), length(are_mhc_binding_essays))
+      # t <- t[are_mhc_binding_essays, ]
+      # testthat::expect_equal(nrow(t), sum(are_mhc_binding_essays))
+    } else {
+      testthat::expect_equal(which_cells, "mhc_ligands")
+      if (allele_set == "per_allele") {
+        is_correct_haplotype <- purrr::map_lgl(content, function(x) {  haplotype == x$mhc_allele_name } ) 
+        message("Candidates with correct haplotype: ", sum(is_correct_haplotype))
+        t <- t[is_correct_haplotype, ]
+        testthat::expect_equal(nrow(t), sum(is_correct_haplotype))
+      } else {
+        testthat::expect_equal(allele_set, "all_alleles")
+        # content[[1]]$mhc_class
+        # as.character(as.roman(mhc_class)) == content[[1]]$mhc_class
+        is_correct_mhc_class <- purrr::map_lgl(content, function(x) {  as.character(as.roman(mhc_class)) == x$mhc_class } ) 
+        t <- t[is_correct_mhc_class, ]
+        testthat::expect_equal(nrow(t), sum(is_correct_mhc_class))
+      }
     }
   }
   t <- dplyr::distinct(t)
