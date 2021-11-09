@@ -5,8 +5,11 @@ args <- commandArgs(trailingOnly = TRUE)
 if (1 == 2) {
   setwd("~/GitHubs/bbbq_article_issue_157")
   list.files()
-  args <- c("iedb_b_cell", "per_allele", 2)
   args <- c("iedb_t_cell", "per_allele", 1)
+
+
+  args <- c("iedb_t_cell", "per_allele", 1)
+  args <- c("iedb_b_cell", "per_allele", 2)
   args <- c("iedb_mhc_ligand", "all_alleles", 1)
   args <- c("iedb_mhc_ligand", "all_alleles", 2)
   args <- c("iedb_b_cell", "all_alleles", 1)
@@ -16,11 +19,13 @@ message("args: {", paste0(args, collapse = ", "), "}")
 testthat::expect_equal(length(args), 3)
 dataset <- as.character(args[1])
 message("dataset: ", dataset)
+# No Schellens or Bergseng here
 testthat::expect_true(
   dataset %in% c(
-    "schellens", "bergseng", "iedb_b_cell", "iedb_t_cell","iedb_mhc_ligand"
+    "iedb_b_cell", "iedb_t_cell","iedb_mhc_ligand"
   )
 )
+
 allele_set <- as.character(args[2])
 testthat::expect_true(allele_set %in% c("per_allele", "all_alleles"))
 message("allele_set: ", allele_set)
@@ -40,7 +45,7 @@ testthat::expect_true(!is.na(which_cells))
 message("which_cells: ", which_cells)
 
 
-  
+
 tibbles <- list()
 i <- 1
 haplotypes <- NA
@@ -53,7 +58,7 @@ for (haplotype in haplotypes) {
   # Use the IEDB names
   # Don't need in new BBBQ version
   haplotype <- stringr::str_replace_all(
-    haplotype, "\\*([[:digit:]]{2})([[:digit:]]{2})", 
+    haplotype, "\\*([[:digit:]]{2})([[:digit:]]{2})",
     "*\\1:\\2"
   )
   message(
@@ -135,7 +140,7 @@ for (haplotype in haplotypes) {
     message("Found ", length(content), " candidates")
     if ("message" %in% names(content)) {
       if (
-          stringr::str_detect(
+        stringr::str_detect(
           string = content$message,
           pattern = "column .* does not exist"
         )
@@ -154,7 +159,7 @@ for (haplotype in haplotypes) {
     if (which_cells == "b_cells" || which_cells == "t_cells")  {
       # Do not check for MHC binding assays
       # content[[1]]
-      # are_mhc_binding_essays <- purrr::map_lgl(content, function(x) { "MHC binding assay" %in% x$mhc_allele_evidences } ) 
+      # are_mhc_binding_essays <- purrr::map_lgl(content, function(x) { "MHC binding assay" %in% x$mhc_allele_evidences } )
       # head(are_mhc_binding_essays)
       # testthat::expect_equal(length(linear_sequences), length(are_mhc_binding_essays))
       # t <- t[are_mhc_binding_essays, ]
@@ -162,7 +167,7 @@ for (haplotype in haplotypes) {
     } else {
       testthat::expect_equal(which_cells, "mhc_ligands")
       if (allele_set == "per_allele") {
-        is_correct_haplotype <- purrr::map_lgl(content, function(x) {  haplotype == x$mhc_allele_name } ) 
+        is_correct_haplotype <- purrr::map_lgl(content, function(x) {  haplotype == x$mhc_allele_name } )
         message("Candidates with correct haplotype: ", sum(is_correct_haplotype))
         t <- t[is_correct_haplotype, ]
         testthat::expect_equal(nrow(t), sum(is_correct_haplotype))
@@ -170,15 +175,18 @@ for (haplotype in haplotypes) {
         testthat::expect_equal(allele_set, "all_alleles")
         # content[[1]]$mhc_class
         # as.character(as.roman(mhc_class)) == content[[1]]$mhc_class
-        is_correct_mhc_class <- purrr::map_lgl(content, function(x) {  as.character(as.roman(mhc_class)) == x$mhc_class } ) 
+        is_correct_mhc_class <- purrr::map_lgl(content, function(x) {  as.character(as.roman(mhc_class)) == x$mhc_class } )
         t <- t[is_correct_mhc_class, ]
         testthat::expect_equal(nrow(t), sum(is_correct_mhc_class))
       }
     }
   }
+  epitopes <- unique(sort(epitopes))
+  testthat::expect_equal(length(epitopes), length(unique(epitopes)))
+  t <- tibble::tibble(linear_sequence = epitopes)
   t <- dplyr::distinct(t)
-  t$haplotype <- haplotype 
-  t$cell_type <- which_cells 
+  t$haplotype <- haplotype
+  t$cell_type <- which_cells
   message("Got ", nrow(t), " new epitopes")
   tibbles[[i]] <- t
   i <- i + 1
