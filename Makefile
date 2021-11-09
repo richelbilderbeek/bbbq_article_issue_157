@@ -1,6 +1,6 @@
 all: \
      results_per_allele.csv  \
-     results.csv \
+     results_all_alleles.csv  \
      results.png \
      results.tex \
      figure_2d.png \

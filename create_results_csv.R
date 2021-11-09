@@ -1,3 +1,5 @@
+library(dplyr)
+
 args <- commandArgs(trailingOnly = TRUE)
 message("args: {", paste0(args, collapse = ", "), "}")
 

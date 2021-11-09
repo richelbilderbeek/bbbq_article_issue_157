@@ -128,13 +128,13 @@ get_epitope_sequences_iedb <- function(dataset, mhc_class, allele_set) {
 t_epitope_sequences <- tibble::tibble()
 if (mhc_class == 1 && dataset == "schellens") {
   t_epitope_sequences <- tibble::tibble(
-    epitope_sequences = get_epitope_sequences_schellens_1(),
+    epitope_sequence = get_epitope_sequences_schellens_1(),
     allele_name = "all",
     cell_type = "irrelevant"
   )
 } else if (mhc_class == 2 && dataset == "bergseng") {
   t_epitope_sequences <- tibble::tibble(
-    epitope_sequences = get_epitope_sequences_bergseng_2(),
+    epitope_sequence = get_epitope_sequences_bergseng_2(),
     allele_name = "all",
     cell_type = "irrelevant"
   )
