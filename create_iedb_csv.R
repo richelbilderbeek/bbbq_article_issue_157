@@ -52,6 +52,10 @@ haplotypes <- NA
 if (mhc_class == 1) haplotypes <- bbbq::get_mhc1_haplotypes()
 if (mhc_class == 2) haplotypes <- bbbq::get_mhc2_haplotypes()
 if (allele_set == "all_alleles") haplotypes <- "all"
+if (1 == 2) {
+  # Debugging
+  haplotypes <- haplotypes[1:3]
+}
 n_haplotypes <- length(haplotypes)
 
 for (haplotype in haplotypes) {
@@ -73,10 +77,11 @@ for (haplotype in haplotypes) {
   }
   if (which_cells == "mhc_ligands") {
     if (haplotype == "all") {
-      epitopes <- iedbr::get_all_mhc_ligand_epitopes()
+      epitopes <- iedbr::get_all_mhc_ligand_epitopes(verbose = TRUE)
     } else {
       epitopes <- iedbr::get_all_mhc_ligand_epitopes(
-        mhc_allele_name = paste0("cs.{", haplotype,"}")
+        mhc_allele_name = paste0("cs.{", haplotype,"}"),
+        verbose = TRUE
       )
     }
   }
