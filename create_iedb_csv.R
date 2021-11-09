@@ -92,6 +92,6 @@ for (allele_name in allele_names) {
 }
 t <- dplyr::bind_rows(tibbles)
 
-testthat::expect_equal(names(t), c("linear_sequence", "")
+testthat::expect_equal(names(t), c("linear_sequence", "allele_name")
 readr::write_csv(t, output_filename)
 testthat::expect_true(file.exists(output_filename))
