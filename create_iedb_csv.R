@@ -87,13 +87,13 @@ for (haplotype in haplotypes) {
   if (which_cells == "mhc_ligands") {
     if (haplotype == "all") {
       epitopes <- iedbr::get_all_mhc_ligand_epitopes(
-        max_n_queries = 3,
+        max_n_queries = max_n_queries,
         verbose = TRUE
       )
     } else {
       epitopes <- iedbr::get_all_mhc_ligand_epitopes(
         mhc_allele_name = paste0("cs.{", haplotype,"}"),
-        max_n_queries = 3,
+        max_n_queries = max_n_queries,
         verbose = TRUE
       )
     }
