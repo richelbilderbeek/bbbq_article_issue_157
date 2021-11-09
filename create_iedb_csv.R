@@ -1,5 +1,7 @@
 require(httr)
 
+max_n_queries <- 3
+
 args <- commandArgs(trailingOnly = TRUE)
 
 if (1 == 2) {
@@ -14,6 +16,9 @@ if (1 == 2) {
   args <- c("iedb_mhc_ligand", "all_alleles", 1)
   args <- c("iedb_mhc_ligand", "all_alleles", 2)
   args <- c("iedb_b_cell", "all_alleles", 1)
+}
+if (pureseqtmr::is_on_ci()) {
+  max_n_queries <- 3
 }
 message("args: {", paste0(args, collapse = ", "), "}")
 testthat::expect_equal(length(args), 3)
@@ -33,6 +38,10 @@ message("allele_set: ", allele_set)
 mhc_class <- as.numeric(args[3])
 message("mhc_class: ", mhc_class)
 testthat::expect_true(mhc_class %in% c(1, 2))
+
+message("max_n_queries: ", max_n_queries)
+iedbr::check_max_n_queries(max_n_queries)
+
 
 output_filename <- paste0(dataset, "_", allele_set, "_", mhc_class, ".csv")
 message("output_filename: ", output_filename)
@@ -77,10 +86,14 @@ for (haplotype in haplotypes) {
   }
   if (which_cells == "mhc_ligands") {
     if (haplotype == "all") {
-      epitopes <- iedbr::get_all_mhc_ligand_epitopes(verbose = TRUE)
+      epitopes <- iedbr::get_all_mhc_ligand_epitopes(
+        max_n_queries = 3,
+        verbose = TRUE
+      )
     } else {
       epitopes <- iedbr::get_all_mhc_ligand_epitopes(
         mhc_allele_name = paste0("cs.{", haplotype,"}"),
+        max_n_queries = 3,
         verbose = TRUE
       )
     }
@@ -94,8 +107,6 @@ for (haplotype in haplotypes) {
       )
     }
   }
-  testthat::expect_true(length(epitopes) != 0)
-
   epitopes <- unique(sort(epitopes))
   testthat::expect_equal(length(epitopes), length(unique(epitopes)))
   t <- tibble::tibble(linear_sequence = epitopes)
