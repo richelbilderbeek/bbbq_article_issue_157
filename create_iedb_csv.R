@@ -55,12 +55,6 @@ if (allele_set == "all_alleles") haplotypes <- "all"
 n_haplotypes <- length(haplotypes)
 
 for (haplotype in haplotypes) {
-  # Use the IEDB names
-  # Don't need in new BBBQ version
-  haplotype <- stringr::str_replace_all(
-    haplotype, "\\*([[:digit:]]{2})([[:digit:]]{2})",
-    "*\\1:\\2"
-  )
   message(
     i, "/", n_haplotypes, ": ",
     "haplotype: ", haplotype, ", ",
