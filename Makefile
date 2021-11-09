@@ -1,10 +1,10 @@
 all: \
+     iedb_b_cell_epitopes_and_mhc_alleles.csv \
+     iedb_mhc_ligand_epitopes_and_mhc_alleles.csv \
+     iedb_t_cell_epitopes_and_mhc_alleles.csv \
+     iedb_b_cell_per_allele_1.csv \
      iedb_mhc_ligand_per_allele_1.csv \
-     iedb_mhc_ligand_all_alleles_1.csv \
-     iedb_mhc_ligand_per_allele_2.csv \
-     iedb_mhc_ligand_all_alleles_2.csv
-     #iedb_b_cell_per_allele_1.csv
-     #iedb_t_cell_per_allele_1.csv
+     iedb_t_cell_per_allele_1.csv
      #iedb_b_cell_all_alleles_1.csv \
      #iedb_t_cell_all_alleles_1.csv \
      #iedb_b_cell_per_allele_2.csv \
@@ -23,44 +23,59 @@ all: \
 #
 # IEDB
 #
-iedb_mhc_ligand_and_allele.csv: create_iedb_mhc_ligand_and_allele.R
-	Rscript create_iedb_mhc_ligand_and_allele.R
 
-iedb_b_cell_per_allele_1.csv: create_iedb_csv.R
+# General tables
+
+iedb_b_cell_epitopes_and_mhc_alleles.csv: 
+	Rscript create_iedb_b_cell_epitopes_and_mhc_alleles.R
+
+iedb_mhc_ligand_epitopes_and_mhc_alleles.csv:
+	Rscript create_iedb_mhc_ligand_epitopes_and_mhc_alleles.R
+
+iedb_t_cell_epitopes_and_mhc_alleles.csv:
+	Rscript create_iedb_t_cell_epitopes_and_mhc_alleles.R
+
+# Specialized tables
+
+# Per allele, MHC-I
+iedb_b_cell_per_allele_1.csv: create_iedb_csv.R iedb_b_cell_epitopes_and_mhc_alleles.csv
 	Rscript create_iedb_csv.R iedb_b_cell per_allele 1
 
-iedb_t_cell_per_allele_1.csv: create_iedb_csv.R
-	Rscript create_iedb_csv.R iedb_t_cell per_allele 1
-
-iedb_mhc_ligand_per_allele_1.csv: create_iedb_csv.R
+iedb_mhc_ligand_per_allele_1.csv: create_iedb_csv.R iedb_mhc_ligand_epitopes_and_mhc_alleles.csv
 	Rscript create_iedb_csv.R iedb_mhc_ligand per_allele 1
 
-iedb_b_cell_all_alleles_1.csv: create_iedb_csv.R
+iedb_t_cell_per_allele_1.csv: create_iedb_csv.R iedb_t_cell_epitopes_and_mhc_alleles.csv
+	Rscript create_iedb_csv.R iedb_t_cell per_allele 1
+
+# All alleles, MHC-I
+iedb_b_cell_all_alleles_1.csv: create_iedb_csv.R iedb_b_cell_epitopes_and_mhc_alleles.csv
 	Rscript create_iedb_csv.R iedb_b_cell all_alleles 1
 
-iedb_t_cell_all_alleles_1.csv: create_iedb_csv.R
-	Rscript create_iedb_csv.R iedb_t_cell all_alleles 1
-
-iedb_mhc_ligand_all_alleles_1.csv: create_iedb_csv.R
+iedb_mhc_ligand_all_alleles_1.csv: create_iedb_csv.R iedb_mhc_ligand_epitopes_and_mhc_alleles.csv
 	Rscript create_iedb_csv.R iedb_mhc_ligand all_alleles 1
 
-iedb_b_cell_per_allele_2.csv: create_iedb_csv.R
+iedb_t_cell_all_alleles_1.csv: create_iedb_csv.R iedb_t_cell_epitopes_and_mhc_alleles.csv
+	Rscript create_iedb_csv.R iedb_t_cell all_alleles 1
+
+# Per allele, MHC-II
+iedb_b_cell_per_allele_2.csv: create_iedb_csv.R iedb_b_cell_epitopes_and_mhc_alleles.csv
 	Rscript create_iedb_csv.R iedb_b_cell per_allele 2
 
-iedb_t_cell_per_allele_2.csv: create_iedb_csv.R
-	Rscript create_iedb_csv.R iedb_t_cell per_allele 2
-
-iedb_mhc_ligand_per_allele_2.csv: create_iedb_csv.R
+iedb_mhc_ligand_per_allele_2.csv: create_iedb_csv.R iedb_mhc_ligand_epitopes_and_mhc_alleles.csv
 	Rscript create_iedb_csv.R iedb_mhc_ligand per_allele 2
 
-iedb_b_cell_all_alleles_2.csv: create_iedb_csv.R
+iedb_t_cell_per_allele_2.csv: create_iedb_csv.R iedb_t_cell_epitopes_and_mhc_alleles.csv
+	Rscript create_iedb_csv.R iedb_t_cell per_allele 2
+
+# All alleles, MHC-II
+iedb_b_cell_all_alleles_2.csv: create_iedb_csv.R iedb_b_cell_epitopes_and_mhc_alleles.csv
 	Rscript create_iedb_csv.R iedb_b_cell all_alleles 2
 
-iedb_t_cell_all_alleles_2.csv: create_iedb_csv.R
-	Rscript create_iedb_csv.R iedb_t_cell all_alleles 2
-
-iedb_mhc_ligand_all_alleles_2.csv: create_iedb_csv.R
+iedb_mhc_ligand_all_alleles_2.csv: create_iedb_csv.R iedb_mhc_ligand_epitopes_and_mhc_alleles.csv
 	Rscript create_iedb_csv.R iedb_mhc_ligand all_alleles 2
+
+iedb_t_cell_all_alleles_2.csv: create_iedb_csv.R iedb_t_cell_epitopes_and_mhc_alleles.csv
+	Rscript create_iedb_csv.R iedb_t_cell all_alleles 2
 
 #
 # matches

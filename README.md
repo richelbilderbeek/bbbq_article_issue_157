@@ -31,6 +31,15 @@ From a terminal, do:
 make
 ```
 
+##
+
+File                                   |Description
+---------------------------------------|--------------------------------------------------------------------------------
+iedb_b_cell_epitopes_and_allele.csv    |table with `linear_sequence` and `mhc_allele_name`, as presented by B cells
+iedb_mhc_ligand_epitopes_and_allele.csv|table with `linear_sequence` and `mhc_allele_name` as detected using MHC ligands
+iedb_t_cell_epitopes_and_allele.csv    |table with `linear_sequence` and `mhc_allele_name`, as presented by T cells
+
+
 ## Results
 
  * [results/results.csv](results/results.csv)
