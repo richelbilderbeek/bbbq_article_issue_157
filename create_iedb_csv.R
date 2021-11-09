@@ -5,14 +5,13 @@ if (1 == 2) {
   list.files()
   args <- c("iedb_t_cell", "per_allele", 1)
   args <- c("iedb_t_cell", "per_allele", 1)
-  args <- c("iedb_b_cell", "per_allele", 2)
-  
-  args <- c("iedb_t_cell", "all_alleles", 1)
-  
-  args <- c("iedb_b_cell", "all_alleles", 1)
-  args <- c("iedb_mhc_ligand", "all_alleles", 1)
-  args <- c("iedb_mhc_ligand", "all_alleles", 2)
   args <- c("iedb_mhc_ligand", "per_allele", 2)
+  
+  # args <- c("iedb_t_cell", "all_alleles", 1)
+  # args <- c("iedb_b_cell", "all_alleles", 1)
+  # args <- c("iedb_mhc_ligand", "all_alleles", 1)
+  # args <- c("iedb_mhc_ligand", "all_alleles", 2)
+  # args <- c("iedb_mhc_ligand", "per_allele", 2)
 }
 message("args: {", paste0(args, collapse = ", "), "}")
 testthat::expect_equal(length(args), 3)
@@ -93,6 +92,7 @@ for (allele_name in allele_names) {
   t <- t[has_valid_mhc_allele_name, ]
   t <- dplyr::distinct(t)
   t <- dplyr::rename(t, allele_name = mhc_allele_name)
+  t$allele_name <- allele_name
   t$cell_type <- which_cells
   message("Got ", nrow(t), " new epitopes")
   tibbles[[i]] <- t
