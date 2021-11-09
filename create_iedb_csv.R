@@ -11,14 +11,15 @@ args <- commandArgs(trailingOnly = TRUE)
 if (1 == 2) {
   setwd("~/GitHubs/bbbq_article_issue_157")
   list.files()
-  args <- c("iedb_mhc_ligand", "per_allele", 2)
 
   args <- c("iedb_t_cell", "per_allele", 1)
+  
   args <- c("iedb_t_cell", "per_allele", 1)
   args <- c("iedb_b_cell", "per_allele", 2)
   args <- c("iedb_mhc_ligand", "all_alleles", 1)
   args <- c("iedb_mhc_ligand", "all_alleles", 2)
   args <- c("iedb_b_cell", "all_alleles", 1)
+  args <- c("iedb_mhc_ligand", "per_allele", 2)
 }
 message("args: {", paste0(args, collapse = ", "), "}")
 testthat::expect_equal(length(args), 3)
@@ -92,6 +93,6 @@ for (allele_name in allele_names) {
 }
 t <- dplyr::bind_rows(tibbles)
 
-testthat::expect_equal(names(t), c("linear_sequence", "allele_name")
+testthat::expect_equal(names(t), c("linear_sequence", "allele_name", "cell_type"))
 readr::write_csv(t, output_filename)
 testthat::expect_true(file.exists(output_filename))
