@@ -11,20 +11,24 @@ allele_set <- as.character(args[1])
 testthat::expect_true(allele_set %in% c("per_allele", "all_alleles"))
 message("allele_set: ", allele_set)
 
+dataset <- c()
+if (allele_set == "all_alleles") dataset <- c("schellens", "bergseng")
+if (allele_set == "per_allele") dataset <- c("iedb_b_cell", "iedb_mhc_ligand", "iedb_t_cell")
+testthat::expect_true(length(dataset) > 0)
+message("dataset: ", paste(dataset, collapse = ", "))
+
 results_filename <- paste0("results_", allele_set, ".csv")
 message("results_filename: ", results_filename, " (this is the output file)")
+
+# tool <- c("PureseqTM", "TMHMM"),
+tool <- "TMHMM"
+message("tool: ", tool)
 
 
 t <- tidyr::expand_grid(
   mhc_class = c(1, 2),
-  tool = c("PureseqTM", "TMHMM"),
-  dataset = c(
-    "schellens", 
-    "bergseng", 
-    "iedb_b_cell", 
-    "iedb_mhc_ligand", 
-    "iedb_t_cell"
-  ),
+  tool = tool,
+  dataset = dataset,
   n = NA,     # Number of epitopes in proteome
   n_tmp = NA, # Number of epitopes in transmembrane protein
   n_tmh = NA, # Number of epitopes in transmembrane helix
@@ -35,12 +39,11 @@ t <- t[!(t$dataset == "schellens" & t$mhc_class == 2), ]
 # Bergseng is MHC-II only, remove MHC-I
 t <- t[!(t$dataset == "bergseng" & t$mhc_class == 1), ]
 
-if (allele_set == "per_allele") {
-  # Schellens and Bergseng are all_alleles
-  t <- t[!(t$dataset == "schellens"), ]
-  t <- t[!(t$dataset == "bergseng"), ]
-  
-}
+# if (allele_set == "per_allele") {
+#   # Schellens and Bergseng are all_alleles
+#   t <- t[!(t$dataset == "schellens"), ]
+#   t <- t[!(t$dataset == "bergseng"), ]
+# }
 
 testthat::expect_identical(t, dplyr::distinct(t))
 
@@ -62,12 +65,16 @@ for (i in seq_len(nrow(t))) {
       show_col_types = FALSE
     )
   )
-  tmhs_csv_filename <- NA
+  tmhs_csv_filename <- c()
   if (tool == "PureseqTM") {
-    tmhs_csv_filename <- paste0("tmhs_pureseqtm_", dataset, "_", mhc_class, ".csv")
+    tmhs_csv_filename <- paste0("tmhs_pureseqtm_", dataset, "_", allele_set, "_", mhc_class, ".csv")
   } else {
     testthat::expect_equal(tool, "TMHMM")
-    tmhs_csv_filename <- paste0("tmhs_tmhmm_", dataset, "_", mhc_class, ".csv")
+    tmhs_csv_filename <- paste0("tmhs_tmhmm_", dataset, "_", allele_set, "_", mhc_class, ".csv")
+  }
+  testthat::expect_true(length(tmhs_csv_filename) > 0)
+  if (!file.exists(tmhs_csv_filename)) {
+    stop("Cannot find 'tmhs_csv_filename' with name ", tmhs_csv_filename)  
   }
   testthat::expect_true(file.exists(tmhs_csv_filename))
   t_tmhs <- readr::read_csv(tmhs_csv_filename, show_col_types = FALSE)
