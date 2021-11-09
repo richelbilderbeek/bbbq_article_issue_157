@@ -1,11 +1,11 @@
 all: \
-     results_all_alleles.csv  \
      results_per_allele.csv  \
      results.csv \
      results.png \
      results.tex \
      figure_2d.png \
      results.tiff
+     # results_all_alleles.csv  \
 
 #
 # IEDB
@@ -106,23 +106,22 @@ matches_bergseng_all_alleles_2.csv: create_matches_csv.R
 #	Rscript create_matches_csv.R 2 iedb_t_cell all_alleles
 
 # IEBD, per allele
-
-matches_iedb_b_cell_per_allele_1.csv: iedb_b_cell_per_allele.csv create_matches_csv.R
+matches_iedb_b_cell_per_allele_1.csv: iedb_b_cell_per_allele_1.csv create_matches_csv.R
 	Rscript create_matches_csv.R 1 iedb_b_cell per_allele
 
-matches_iedb_mhc_ligand_per_allele_1.csv: iedb_mhc_ligand_per_allele.csv create_matches_csv.R
+matches_iedb_mhc_ligand_per_allele_1.csv: iedb_mhc_ligand_per_allele_1.csv create_matches_csv.R
 	Rscript create_matches_csv.R 1 iedb_mhc_ligand per_allele
 
-matches_iedb_t_cell_per_allele_1.csv: iedb_t_cell_per_allele.csv create_matches_csv.R
+matches_iedb_t_cell_per_allele_1.csv: iedb_t_cell_per_allele_1.csv create_matches_csv.R
 	Rscript create_matches_csv.R 1 iedb_t_cell per_allele
 
-matches_iedb_b_cell_per_allele_2.csv: iedb_b_cell_per_allele.csv create_matches_csv.R
+matches_iedb_b_cell_per_allele_2.csv: iedb_b_cell_per_allele_2.csv create_matches_csv.R
 	Rscript create_matches_csv.R 2 iedb_b_cell per_allele
 
-matches_iedb_mhc_ligand_per_allele_2.csv: iedb_mhc_ligand_per_allele.csv create_matches_csv.R
+matches_iedb_mhc_ligand_per_allele_2.csv: iedb_mhc_ligand_per_allele_2.csv create_matches_csv.R
 	Rscript create_matches_csv.R 2 iedb_mhc_ligand per_allele
 
-matches_iedb_t_cell_per_allele_2.csv: iedb_t_cell_per_allele.csv create_matches_csv.R
+matches_iedb_t_cell_per_allele_2.csv: iedb_t_cell_per_allele_2.csv create_matches_csv.R
 	Rscript create_matches_csv.R 2 iedb_t_cell per_allele
 
 #
