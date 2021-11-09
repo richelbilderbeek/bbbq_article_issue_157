@@ -110,34 +110,52 @@ get_epitope_sequences_iedb <- function(dataset, mhc_class, allele_set) {
   t <- t[t$allele_name %in% allele_names, ]
   t <- na.omit(t)
   message("Number of sequences in file with MHC class ", mhc_class, ": ", nrow(t))
-  epitope_sequences <- t$linear_sequence
-  testthat::expect_equal(sum(is.na(epitope_sequences)), 0)
-  epitope_sequences
+  # epitope_sequences <- t$linear_sequence
+  # testthat::expect_equal(sum(is.na(epitope_sequences)), 0)
+  # epitope_sequences
+  testthat::expect_equal(
+    names(t),
+    c("linear_sequence", "allele_name", "cell_type")
+  )
+  t <- dplyr::rename(t, epitope_sequence = linear_sequence)
+  testthat::expect_equal(
+    names(t),
+    c("epitope_sequence", "allele_name", "cell_type")
+  )
+  t
 }
 
-epitope_sequences <- NA
+t_epitope_sequences <- tibble::tibble()
 if (mhc_class == 1 && dataset == "schellens") {
-  epitope_sequences <- get_epitope_sequences_schellens_1()
+  t_epitope_sequences <- tibble::tibble(
+    epitope_sequences = get_epitope_sequences_schellens_1(),
+    allele_name = "all",
+    cell_type = "irrelevant"
+  )
 } else if (mhc_class == 2 && dataset == "bergseng") {
-  epitope_sequences <- get_epitope_sequences_bergseng_2()
+  t_epitope_sequences <- tibble::tibble(
+    epitope_sequences = get_epitope_sequences_bergseng_2(),
+    allele_name = "all",
+    cell_type = "irrelevant"
+  )
 } else {
-  epitope_sequences <- get_epitope_sequences_iedb(
+  t_epitope_sequences <- get_epitope_sequences_iedb(
     dataset = dataset,
     mhc_class = mhc_class,
     allele_set = allele_set
   )
 }
-
-if (mhc_class == 2 && dataset == "iedb_t_cell" && allele_set == "all_alleles") {
-  testthat::expect_equal(length(epitope_sequences), 921)
-}
-
-t_matches <- tibble::tibble(
-  epitope_sequence = epitope_sequences,
-  n_matches = NA,
-  gene_name = NA,
-  sequence = NA
+testthat::expect_equal(
+  names(t_epitope_sequences),
+  c("epitope_sequence", "allele_name", "cell_type")
 )
+
+
+t_matches <- t_epitope_sequences
+t_matches$n_matches <- NA
+t_matches$gene_name <- NA
+t_matches$sequence <- NA
+
 for (i in seq_len(nrow(t_matches))) {
   print(paste0(i, "/", nrow(t_matches)))
   matches <- stringr::str_which(
@@ -150,6 +168,18 @@ for (i in seq_len(nrow(t_matches))) {
     t_matches$gene_name[i] <- t_proteome$name[matches]
   }
 }
+
+testthat::expect_equal(
+  names(t_matches),
+  c(
+    "epitope_sequence",
+    "allele_name",
+    "cell_type",
+    "n_matches",
+    "gene_name",
+    "sequence"
+  )
+)
 
 readr::write_csv(t_matches, matches_csv_filename)
 testthat::expect_true(file.exists(matches_csv_filename))

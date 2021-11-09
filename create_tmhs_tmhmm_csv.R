@@ -6,6 +6,7 @@ if (1 == 2) {
   args <- c("1", "iedb_mhc_ligand", "all_alleles")
   args <- c("2", "bergseng", "all_alleles")
   args <- c("2", "iedb_t_cell", "all_alleles")
+  args <- c("2", "iedb_t_cell", "per_allele")
 }
 testthat::expect_equal(length(args), 3)
 mhc_class <- as.numeric(args[1])
