@@ -1,24 +1,24 @@
-require(httr)
-
-max_n_queries <- Inf
+# Input files that are needed
+b_cell_filename <- "iedb_b_cell_epitopes_and_mhc_alleles.csv"
+mhc_ligand_filename <- "iedb_mhc_ligand_epitopes_and_mhc_alleles.csv"
+t_cell_filename <- "iedb_t_cell_epitopes_and_mhc_alleles.csv"
+testthat::expect_true(file.exists(b_cell_filename))
+testthat::expect_true(file.exists(mhc_ligand_filename))
+testthat::expect_true(file.exists(t_cell_filename))
 
 args <- commandArgs(trailingOnly = TRUE)
 
 if (1 == 2) {
   setwd("~/GitHubs/bbbq_article_issue_157")
   list.files()
-  args <- c("iedb_t_cell", "per_allele", 1)
   args <- c("iedb_mhc_ligand", "per_allele", 2)
 
-
+  args <- c("iedb_t_cell", "per_allele", 1)
   args <- c("iedb_t_cell", "per_allele", 1)
   args <- c("iedb_b_cell", "per_allele", 2)
   args <- c("iedb_mhc_ligand", "all_alleles", 1)
   args <- c("iedb_mhc_ligand", "all_alleles", 2)
   args <- c("iedb_b_cell", "all_alleles", 1)
-}
-if (pureseqtmr::is_on_ci()) {
-  max_n_queries <- 3
 }
 message("args: {", paste0(args, collapse = ", "), "}")
 testthat::expect_equal(length(args), 3)
@@ -39,85 +39,59 @@ mhc_class <- as.numeric(args[3])
 message("mhc_class: ", mhc_class)
 testthat::expect_true(mhc_class %in% c(1, 2))
 
-message("max_n_queries: ", max_n_queries)
-iedbr::check_max_n_queries(max_n_queries)
-
-
 output_filename <- paste0(dataset, "_", allele_set, "_", mhc_class, ".csv")
 message("output_filename: ", output_filename)
 
-which_cells <- NA
-if (dataset == "iedb_t_cell") which_cells <- "t_cells"
-if (dataset == "iedb_b_cell") which_cells <- "b_cells"
-if (dataset == "iedb_mhc_ligand") which_cells <- "mhc_ligands"
-testthat::expect_true(!is.na(which_cells))
-message("which_cells: ", which_cells)
+input_filename <- character(0)
+if (dataset == "iedb_b_cell") input_filename <- b_cell_filename
+if (dataset == "iedb_mhc_ligand") input_filename <- mhc_ligand_filename
+if (dataset == "iedb_t_cell") input_filename <- t_cell_filename
+testthat::expect_equal(length(input_filename), 1)
+message("input_filename: ", input_filename)
 
+which_cells <- character(0)
+if (dataset == "iedb_b_cell") which_cells <- "b_cell"
+if (dataset == "iedb_mhc_ligand") which_cells <- "mhc_ligand"
+if (dataset == "iedb_t_cell") which_cells <- "t_cell"
+testthat::expect_equal(length(which_cells), 1)
+message("which_cells: ", which_cells)
 
 
 tibbles <- list()
 i <- 1
-haplotypes <- NA
-if (mhc_class == 1) haplotypes <- bbbq::get_mhc1_haplotypes()
-if (mhc_class == 2) haplotypes <- bbbq::get_mhc2_haplotypes()
-if (allele_set == "all_alleles") haplotypes <- "all"
-if (1 == 2) {
-  # Debugging
-  haplotypes <- haplotypes[1:3]
-}
-n_haplotypes <- length(haplotypes)
+allele_names <- NA
+if (mhc_class == 1) allele_names <- bbbq::get_mhc1_allele_names()
+if (mhc_class == 2) allele_names <- bbbq::get_mhc2_allele_names()
+if (allele_set == "all_alleles") allele_names <- "all"
 
-for (haplotype in haplotypes) {
+n_allele_names <- length(allele_names)
+
+for (allele_name in allele_names) {
   message(
-    i, "/", n_haplotypes, ": ",
-    "haplotype: ", haplotype, ", ",
-    "which_cells: ", which_cells, ", ",
+    i, "/", n_allele_names, ": ",
+    "allele_name: ", allele_name, ", ",
+    "input_filename: ", input_filename, ", ",
     "mhc_class: ", mhc_class
   )
-  epitopes <- c()
-  if (which_cells == "b_cells") {
-    if (haplotype == "all") {
-      epitopes <- iedbr::get_all_b_cell_epitopes()
-    } else {
-      epitopes <- iedbr::get_all_b_cell_epitopes(
-        mhc_allele_names = paste0("cs.{", haplotype,"}")
-      )
-    }
-  }
-  if (which_cells == "mhc_ligands") {
-    if (haplotype == "all") {
-      epitopes <- iedbr::get_all_mhc_ligand_epitopes(
-        max_n_queries = max_n_queries,
-        verbose = TRUE
-      )
-    } else {
-      epitopes <- iedbr::get_all_mhc_ligand_epitopes(
-        mhc_allele_name = paste0("cs.{", haplotype,"}"),
-        max_n_queries = max_n_queries,
-        verbose = TRUE
-      )
-    }
-  }
-  if (which_cells == "t_cells") {
-    if (haplotype == "all") {
-      epitopes <- iedbr::get_all_t_cell_epitopes()
-    } else {
-      epitopes <- iedbr::get_all_t_cell_epitopes(
-        mhc_allele_names = paste0("cs.{", haplotype,"}")
-      )
-    }
-  }
-  epitopes <- unique(sort(epitopes))
-  testthat::expect_equal(length(epitopes), length(unique(epitopes)))
-  t <- tibble::tibble(linear_sequence = epitopes)
+  t <- readr::read_csv(
+    file = input_filename,
+    show_col_types = FALSE
+  )
+  has_valid_mhc_allele_name <- stringr::str_detect(
+    string = t$mhc_allele_name,
+    pattern = iedbr::mhc_allele_name_to_regex(allele_name)
+  )
+  sum(has_valid_mhc_allele_name)
+  t <- t[has_valid_mhc_allele_name, ]
   t <- dplyr::distinct(t)
-  t$haplotype <- haplotype
+  t <- dplyr::rename(t, allele_name = mhc_allele_name)
   t$cell_type <- which_cells
   message("Got ", nrow(t), " new epitopes")
   tibbles[[i]] <- t
   i <- i + 1
 }
 t <- dplyr::bind_rows(tibbles)
-t
+
+testthat::expect_equal(names(t), c("linear_sequence", "")
 readr::write_csv(t, output_filename)
 testthat::expect_true(file.exists(output_filename))
