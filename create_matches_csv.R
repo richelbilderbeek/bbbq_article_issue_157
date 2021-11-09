@@ -111,7 +111,7 @@ get_epitope_sequences_iedb <- function(dataset, mhc_class, allele_set) {
   t <- na.omit(t)
   message("Number of sequences in file with MHC class ", mhc_class, ": ", nrow(t))
   epitope_sequences <- t$linear_sequence
-  expect_equal(sum(is.na(epitope_sequences)), 0)
+  testthat::expect_equal(sum(is.na(epitope_sequences)), 0)
   epitope_sequences
 }
 
