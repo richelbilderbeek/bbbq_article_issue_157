@@ -1,6 +1,6 @@
 require(httr)
 
-max_n_queries <- 3
+max_n_queries <- Inf
 
 args <- commandArgs(trailingOnly = TRUE)
 
