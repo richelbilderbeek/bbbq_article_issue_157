@@ -3,6 +3,7 @@ all: \
      results_all_alleles.csv  \
      results.png \
      results.tex \
+     figure_2c.png \
      figure_2d.png \
      results.tiff
      # results_all_alleles.csv  \
@@ -245,6 +246,7 @@ results_all_alleles.csv: create_results_csv.R \
              tmhs_tmhmm_schellens_all_alleles_1.csv
 	Rscript create_results_csv.R all_alleles
 
+# Also creates results_per_allele_per_allele.csv
 results_per_allele.csv: create_results_csv.R \
              tmhs_tmhmm_iedb_b_cell_per_allele_1.csv \
              tmhs_tmhmm_iedb_t_cell_per_allele_1.csv \
@@ -270,8 +272,12 @@ results.tiff: results.csv create_results_figure.R
 results.tex: results.csv create_results_tex.R
 	Rscript create_results_tex.R
 
+# https://github.com/richelbilderbeek/bbbq_article/issues/246
+figure_2c.png: results_per_allele.csv create_figure_2c.R
+	Rscript create_figure_2c.R
+
 # https://github.com/richelbilderbeek/bbbq_article/issues/245
-figure_2d.png: results.csv create_figure_2d.R
+figure_2d.png: results_per_allele.csv create_figure_2d.R
 	Rscript create_figure_2d.R
 
 clean:
