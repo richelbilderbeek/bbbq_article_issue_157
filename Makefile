@@ -2,6 +2,7 @@ all: \
      results_per_allele.csv  \
      results_all_alleles.csv  \
      figure_2a.png \
+     figure_2b.png \
      figure_2c.png \
      figure_2d.png
 
@@ -272,6 +273,10 @@ results.tex: results.csv create_results_tex.R
 # https://github.com/richelbilderbeek/bbbq_article/issues/243
 figure_2a.png: results_per_allele.csv create_figure_2a.R
 	Rscript create_figure_2a.R
+
+# https://github.com/richelbilderbeek/bbbq_article/issues/244
+figure_2b.png: results_per_allele.csv create_figure_2b.R
+	Rscript create_figure_2b.R
 
 # https://github.com/richelbilderbeek/bbbq_article/issues/246
 figure_2c.png: results_per_allele.csv create_figure_2c.R
