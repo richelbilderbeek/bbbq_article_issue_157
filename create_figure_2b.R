@@ -29,6 +29,6 @@ p <- ggplot2::ggplot(t,
   ggplot2::theme(text = ggplot2::element_text(size = 24))
 p
 
-p; ggplot2::ggsave("figure_2c.png", width = 180, units = "mm", height = 180)
-p; ggplot2::ggsave("figure_2c.tiff", width = 180, units = "mm", height = 180)
-p; ggplot2::ggsave("figure_2c.eps", width = 180, units = "mm", height = 180)
+p; ggplot2::ggsave("figure_2b.png", width = 180, units = "mm", height = 180)
+p; ggplot2::ggsave("figure_2b.tiff", width = 180, units = "mm", height = 180)
+p; ggplot2::ggsave("figure_2b.eps", width = 180, units = "mm", height = 180)

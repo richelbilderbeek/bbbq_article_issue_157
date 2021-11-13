@@ -97,6 +97,6 @@ p <- ggplot2::ggplot(t_scatter,
   ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90))
 p
 
-p; ggplot2::ggsave("figure_2b.png", width = 180, units = "mm", height = 180)
-p; ggplot2::ggsave("figure_2b.tiff", width = 180, units = "mm", height = 180)
-p; ggplot2::ggsave("figure_2b.eps", width = 180, units = "mm", height = 180)
+p; ggplot2::ggsave("figure_2c.png", width = 180, units = "mm", height = 180)
+p; ggplot2::ggsave("figure_2c.tiff", width = 180, units = "mm", height = 180)
+p; ggplot2::ggsave("figure_2c.eps", width = 180, units = "mm", height = 180)
