@@ -238,24 +238,25 @@ tmhs_pureseqtm_iedb_t_cell_per_allele_2.csv: matches_iedb_t_cell_per_allele_2.cs
 #
 # Results
 #
-results_all_alleles.csv: create_results_csv.R \
-             tmhs_pureseqtm_bergseng_all_alleles_2.csv \
-             tmhs_pureseqtm_schellens_all_alleles_1.csv \
-             tmhs_tmhmm_bergseng_all_alleles_2.csv \
-             tmhs_tmhmm_schellens_all_alleles_1.csv
-	Rscript create_results_csv.R all_alleles
+#results_all_alleles.csv: create_results_csv.R \
+#             tmhs_pureseqtm_bergseng_all_alleles_2.csv \
+#             tmhs_pureseqtm_schellens_all_alleles_1.csv \
+#             tmhs_tmhmm_bergseng_all_alleles_2.csv \
+#             tmhs_tmhmm_schellens_all_alleles_1.csv
+#	Rscript create_results_csv.R all_alleles
 
 # Also creates results_per_allele_per_allele.csv
 results_per_allele.csv: create_results_csv.R \
              tmhs_tmhmm_iedb_t_cell_per_allele_1.csv \
              tmhs_tmhmm_iedb_t_cell_per_allele_2.csv \
              tmhs_tmhmm_iedb_mhc_ligand_per_allele_1.csv \
-             tmhs_tmhmm_iedb_mhc_ligand_per_allele_2.csv \
-             tmhs_pureseqtm_iedb_mhc_ligand_per_allele_1.csv \
-             tmhs_pureseqtm_iedb_mhc_ligand_per_allele_2.csv \
-             tmhs_pureseqtm_iedb_t_cell_per_allele_1.csv \
-             tmhs_pureseqtm_iedb_t_cell_per_allele_2.csv
+             tmhs_tmhmm_iedb_mhc_ligand_per_allele_2.csv
 	Rscript create_results_csv.R per_allele
+# No PureseqTM 
+#             tmhs_pureseqtm_iedb_mhc_ligand_per_allele_1.csv \
+#             tmhs_pureseqtm_iedb_mhc_ligand_per_allele_2.csv \
+#             tmhs_pureseqtm_iedb_t_cell_per_allele_1.csv \
+#             tmhs_pureseqtm_iedb_t_cell_per_allele_2.csv
 
 
 results.png: results.csv create_results_figure.R
