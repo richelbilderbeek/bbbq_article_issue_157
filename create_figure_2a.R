@@ -109,3 +109,13 @@ p
 p; ggplot2::ggsave("figure_2a.png", width = 180, units = "mm", height = 180)
 p; ggplot2::ggsave("figure_2a.tiff", width = 180, units = "mm", height = 180)
 p; ggplot2::ggsave("figure_2a.eps", width = 180, units = "mm", height = 180)
+
+if (1 == 2) {
+  nrow(readr::read_csv("iedb_mhc_ligand_epitopes_and_mhc_alleles.csv", show_col_types = FALSE))
+  nrow(readr::read_csv("iedb_mhc_ligand_per_allele_1.csv", show_col_types = FALSE))
+  nrow(readr::read_csv("iedb_mhc_ligand_per_allele_2.csv", show_col_types = FALSE))
+  nrow(readr::read_csv("matches_iedb_mhc_ligand_per_allele_1.csv", show_col_types = FALSE))
+  nrow(readr::read_csv("matches_iedb_mhc_ligand_per_allele_2.csv", show_col_types = FALSE))
+  nrow(readr::read_csv("tmhs_tmhmm_iedb_mhc_ligand_per_allele_1.csv", show_col_types = FALSE))
+  nrow(readr::read_csv("tmhs_tmhmm_iedb_mhc_ligand_per_allele_2.csv", show_col_types = FALSE))
+}

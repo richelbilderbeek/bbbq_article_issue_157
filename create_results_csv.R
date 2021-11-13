@@ -15,7 +15,8 @@ message("allele_set: ", allele_set)
 
 dataset <- c()
 if (allele_set == "all_alleles") dataset <- c("schellens", "bergseng")
-if (allele_set == "per_allele") dataset <- c("iedb_b_cell", "iedb_mhc_ligand", "iedb_t_cell")
+# if (allele_set == "per_allele") dataset <- c("iedb_b_cell", "iedb_mhc_ligand", "iedb_t_cell")
+if (allele_set == "per_allele") dataset <- c("iedb_mhc_ligand", "iedb_t_cell")
 testthat::expect_true(length(dataset) > 0)
 message("dataset: ", paste(dataset, collapse = ", "))
 
@@ -33,9 +34,8 @@ t <- tidyr::expand_grid(
   tool = tool,
   dataset = dataset,
   n = NA,     # Number of epitopes in proteome
-  n_tmp = NA, # Number of epitopes in transmembrane protein
   n_tmh = NA, # Number of epitopes in transmembrane helix
-  f_tmh = NA,
+  f_tmh = NA, # Fraction of epitopes in transmembrane helix
 )
 # Schellens is MHC-I only, remove MHC-II
 t <- t[!(t$dataset == "schellens" & t$mhc_class == 2), ]
@@ -51,17 +51,18 @@ for (i in seq_len(nrow(t))) {
   if (1 == 2) {
     dataset <- "iedb_mhc_ligand"
   }
-  matches_filename <- paste0(
-    "matches_", dataset, "_", allele_set, "_", mhc_class, ".csv"
-  )
-  message(i, "/", nrow(t), ": ", matches_filename)
-  testthat::expect_true(file.exists(matches_filename))
-  t$n[i] <- nrow(
-    readr::read_csv(
-      file = matches_filename,
-      show_col_types = FALSE
-    )
-  )
+  # message(i, "/", nrow(t), ": ", matches_filename)
+  # matches_filename <- paste0(
+  #   "matches_", dataset, "_", allele_set, "_", mhc_class, ".csv"
+  # )
+  # message(i, "/", nrow(t), ": ", matches_filename)
+  # testthat::expect_true(file.exists(matches_filename))
+  # t$n[i] <- nrow(
+  #   readr::read_csv(
+  #     file = matches_filename,
+  #     show_col_types = FALSE
+  #   )
+  # )
   tmhs_csv_filename <- c()
   if (tool == "PureseqTM") {
     tmhs_csv_filename <- paste0("tmhs_pureseqtm_", dataset, "_", allele_set, "_", mhc_class, ".csv")
@@ -69,13 +70,14 @@ for (i in seq_len(nrow(t))) {
     testthat::expect_equal(tool, "TMHMM")
     tmhs_csv_filename <- paste0("tmhs_tmhmm_", dataset, "_", allele_set, "_", mhc_class, ".csv")
   }
+  message(i, "/", nrow(t), ": ", tmhs_csv_filename)
   testthat::expect_true(length(tmhs_csv_filename) > 0)
   if (!file.exists(tmhs_csv_filename)) {
     stop("Cannot find 'tmhs_csv_filename' with name ", tmhs_csv_filename)  
   }
   testthat::expect_true(file.exists(tmhs_csv_filename))
   t_tmhs <- readr::read_csv(tmhs_csv_filename, show_col_types = FALSE)
-  t$n_tmp[i] <- length(t_tmhs$topology_overlap)
+  t$n[i] <- nrow(t_tmhs)
   t$n_tmh[i] <- length(stringr::str_which(t_tmhs$topology_overlap, pattern = "[Mm]"))
 
 }

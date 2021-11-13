@@ -32,3 +32,13 @@ p
 p; ggplot2::ggsave("figure_2d.png", width = 180, units = "mm", height = 180)
 p; ggplot2::ggsave("figure_2d.tiff", width = 180, units = "mm", height = 180)
 p; ggplot2::ggsave("figure_2d.eps", width = 180, units = "mm", height = 180)
+
+if (1 == 2) {
+  readr::read_csv("iedb_t_cell_epitopes_and_mhc_alleles.csv", show_col_types = FALSE)
+  readr::read_csv("iedb_t_cell_per_allele_1.csv", show_col_types = FALSE)
+  readr::read_csv("iedb_t_cell_per_allele_2.csv", show_col_types = FALSE)
+  t <- readr::read_csv("matches_iedb_t_cell_per_allele_1.csv", show_col_types = FALSE)
+  readr::read_csv("matches_iedb_t_cell_per_allele_2.csv", show_col_types = FALSE)
+  nrow(readr::read_csv("tmhs_tmhmm_iedb_t_cell_per_allele_1.csv", show_col_types = FALSE))
+  nrow(readr::read_csv("tmhs_tmhmm_iedb_t_cell_per_allele_2.csv", show_col_types = FALSE))
+}
