@@ -1,10 +1,11 @@
 all: \
      results_per_allele.csv  \
-     results_all_alleles.csv  \
      figure_2a.png \
      figure_2b.png \
      figure_2c.png \
      figure_2d.png
+
+# results_all_alleles.csv: would run Bergseng and Schellens
 
 #
 # IEDB
@@ -12,8 +13,8 @@ all: \
 
 # General tables
 
-iedb_b_cell_epitopes_and_mhc_alleles.csv: 
-	Rscript create_iedb_b_cell_epitopes_and_mhc_alleles.R
+#iedb_b_cell_epitopes_and_mhc_alleles.csv: 
+#	Rscript create_iedb_b_cell_epitopes_and_mhc_alleles.R
 
 iedb_mhc_ligand_epitopes_and_mhc_alleles.csv:
 	Rscript create_iedb_mhc_ligand_epitopes_and_mhc_alleles.R
@@ -24,8 +25,8 @@ iedb_t_cell_epitopes_and_mhc_alleles.csv:
 # Specialized tables
 
 # Per allele, MHC-I
-iedb_b_cell_per_allele_1.csv: create_iedb_csv.R iedb_b_cell_epitopes_and_mhc_alleles.csv
-	Rscript create_iedb_csv.R iedb_b_cell per_allele 1
+#iedb_b_cell_per_allele_1.csv: create_iedb_csv.R iedb_b_cell_epitopes_and_mhc_alleles.csv
+#	Rscript create_iedb_csv.R iedb_b_cell per_allele 1
 
 iedb_mhc_ligand_per_allele_1.csv: create_iedb_csv.R iedb_mhc_ligand_epitopes_and_mhc_alleles.csv
 	Rscript create_iedb_csv.R iedb_mhc_ligand per_allele 1
@@ -44,8 +45,8 @@ iedb_t_cell_per_allele_1.csv: create_iedb_csv.R iedb_t_cell_epitopes_and_mhc_all
 #	Rscript create_iedb_csv.R iedb_t_cell all_alleles 1
 
 # Per allele, MHC-II
-iedb_b_cell_per_allele_2.csv: create_iedb_csv.R iedb_b_cell_epitopes_and_mhc_alleles.csv
-	Rscript create_iedb_csv.R iedb_b_cell per_allele 2
+#iedb_b_cell_per_allele_2.csv: create_iedb_csv.R iedb_b_cell_epitopes_and_mhc_alleles.csv
+#	Rscript create_iedb_csv.R iedb_b_cell per_allele 2
 
 iedb_mhc_ligand_per_allele_2.csv: create_iedb_csv.R iedb_mhc_ligand_epitopes_and_mhc_alleles.csv
 	Rscript create_iedb_csv.R iedb_mhc_ligand per_allele 2
@@ -114,8 +115,8 @@ matches_iedb_mhc_ligand_per_allele_1.csv: iedb_mhc_ligand_per_allele_1.csv creat
 matches_iedb_t_cell_per_allele_1.csv: iedb_t_cell_per_allele_1.csv create_matches_csv.R
 	Rscript create_matches_csv.R 1 iedb_t_cell per_allele
 
-matches_iedb_b_cell_per_allele_2.csv: iedb_b_cell_per_allele_2.csv create_matches_csv.R
-	Rscript create_matches_csv.R 2 iedb_b_cell per_allele
+#matches_iedb_b_cell_per_allele_2.csv: iedb_b_cell_per_allele_2.csv create_matches_csv.R
+#	Rscript create_matches_csv.R 2 iedb_b_cell per_allele
 
 matches_iedb_mhc_ligand_per_allele_2.csv: iedb_mhc_ligand_per_allele_2.csv create_matches_csv.R
 	Rscript create_matches_csv.R 2 iedb_mhc_ligand per_allele
@@ -157,8 +158,8 @@ tmhs_tmhmm_bergseng_all_alleles_2.csv: matches_bergseng_all_alleles_2.csv
  tmhs_tmhmm_schellens_per_allele_1.csv: matches_schellens_per_allele_1.csv
 	Rscript create_tmhs_tmhmm_csv.R 1 schellens per_allele
 
-tmhs_tmhmm_iedb_b_cell_per_allele_1.csv: matches_iedb_b_cell_per_allele_1.csv
-	Rscript create_tmhs_tmhmm_csv.R 1 iedb_b_cell per_allele
+#tmhs_tmhmm_iedb_b_cell_per_allele_1.csv: matches_iedb_b_cell_per_allele_1.csv
+#	Rscript create_tmhs_tmhmm_csv.R 1 iedb_b_cell per_allele
 
 tmhs_tmhmm_iedb_mhc_ligand_per_allele_1.csv: matches_iedb_mhc_ligand_per_allele_1.csv
 	Rscript create_tmhs_tmhmm_csv.R 1 iedb_mhc_ligand per_allele
@@ -170,8 +171,8 @@ tmhs_tmhmm_iedb_t_cell_per_allele_1.csv: matches_iedb_t_cell_per_allele_1.csv
 tmhs_tmhmm_bergseng_per_allele_2.csv: matches_bergseng_per_allele_2.csv
 	Rscript create_tmhs_tmhmm_csv.R 2 bergseng per_allele
 
-tmhs_tmhmm_iedb_b_cell_per_allele_2.csv: matches_iedb_b_cell_per_allele_2.csv
-	Rscript create_tmhs_tmhmm_csv.R 2 iedb_b_cell per_allele
+#tmhs_tmhmm_iedb_b_cell_per_allele_2.csv: matches_iedb_b_cell_per_allele_2.csv
+#	Rscript create_tmhs_tmhmm_csv.R 2 iedb_b_cell per_allele
 
 tmhs_tmhmm_iedb_mhc_ligand_per_allele_2.csv: matches_iedb_mhc_ligand_per_allele_2.csv
 	Rscript create_tmhs_tmhmm_csv.R 2 iedb_mhc_ligand per_allele
@@ -212,8 +213,8 @@ tmhs_pureseqtm_bergseng_all_alleles_2.csv: matches_bergseng_all_alleles_2.csv
  tmhs_pureseqtm_schellens_per_allele_1.csv: matches_schellens_per_allele_1.csv
 	Rscript create_tmhs_pureseqtm_csv.R 1 schellens per_allele
 
-tmhs_pureseqtm_iedb_b_cell_per_allele_1.csv: matches_iedb_b_cell_per_allele_1.csv
-	Rscript create_tmhs_pureseqtm_csv.R 1 iedb_b_cell per_allele
+#tmhs_pureseqtm_iedb_b_cell_per_allele_1.csv: matches_iedb_b_cell_per_allele_1.csv
+#	Rscript create_tmhs_pureseqtm_csv.R 1 iedb_b_cell per_allele
 
 tmhs_pureseqtm_iedb_mhc_ligand_per_allele_1.csv: matches_iedb_mhc_ligand_per_allele_1.csv
 	Rscript create_tmhs_pureseqtm_csv.R 1 iedb_mhc_ligand per_allele
@@ -246,17 +247,13 @@ results_all_alleles.csv: create_results_csv.R \
 
 # Also creates results_per_allele_per_allele.csv
 results_per_allele.csv: create_results_csv.R \
-             tmhs_tmhmm_iedb_b_cell_per_allele_1.csv \
              tmhs_tmhmm_iedb_t_cell_per_allele_1.csv \
-             tmhs_tmhmm_iedb_b_cell_per_allele_2.csv \
              tmhs_tmhmm_iedb_t_cell_per_allele_2.csv \
              tmhs_tmhmm_iedb_mhc_ligand_per_allele_1.csv \
              tmhs_tmhmm_iedb_mhc_ligand_per_allele_2.csv \
              tmhs_pureseqtm_iedb_mhc_ligand_per_allele_1.csv \
              tmhs_pureseqtm_iedb_mhc_ligand_per_allele_2.csv \
-             tmhs_pureseqtm_iedb_b_cell_per_allele_1.csv \
              tmhs_pureseqtm_iedb_t_cell_per_allele_1.csv \
-             tmhs_pureseqtm_iedb_b_cell_per_allele_2.csv \
              tmhs_pureseqtm_iedb_t_cell_per_allele_2.csv
 	Rscript create_results_csv.R per_allele
 
