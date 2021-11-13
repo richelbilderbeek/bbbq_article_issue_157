@@ -11,13 +11,14 @@ t
 t <- t[t$dataset == "iedb_mhc_ligand", ]
 t$mhc_class <- as.character(as.roman(t$mhc_class))
 t$mhc_class <- as.factor(t$mhc_class)
+
 p <- ggplot2::ggplot(t, 
   ggplot2::aes(x = mhc_class, y = f_tmh)) +
   ggplot2::geom_col(fill = "#BBBBBB") +
   ggplot2::scale_y_continuous(
     "Epitopes derived from TMH",
     labels = scales::percent,
-    limits = c(0.0, 0.1)
+    limits = c(0.0, 0.4)
   ) +
   ggplot2::scale_x_discrete(
     "MHC class"
