@@ -41,9 +41,8 @@ testthat::expect_true(mhc_class %in% c(1, 2))
 b_cell_filename <- "iedb_b_cell_epitopes_and_mhc_alleles.csv"
 mhc_ligand_filename <- "iedb_mhc_ligand_epitopes_and_mhc_alleles.csv"
 t_cell_filename <- "iedb_t_cell_epitopes_and_mhc_alleles.csv"
-testthat::expect_true(file.exists(b_cell_filename))
-testthat::expect_true(file.exists(mhc_ligand_filename))
-testthat::expect_true(file.exists(t_cell_filename))
+# Do not check if all file exists now, just check the files that
+# are actually used by the Makefile
 
 input_filename <- character(0)
 if (dataset == "iedb_b_cell") input_filename <- b_cell_filename
