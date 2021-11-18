@@ -32,7 +32,7 @@ print(
       "for epitopes taken from the IEDB,",
       "for two different types of assays: ",
       "an MHC ligand assay, as well as a T cell assay. ",
-      "The values between braces show the the number of",
+      "The values between brackets show the the number of",
       "epitopes that were predicted to overlapping with a TMH per all",
       "epitopes that could be uniquely mapped to the",
       "representative human reference proteome."
