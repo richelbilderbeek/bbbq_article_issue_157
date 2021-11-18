@@ -12,9 +12,21 @@ t <- t[t$dataset == "iedb_mhc_ligand", ]
 t$mhc_class <- as.character(as.roman(t$mhc_class))
 t$mhc_class <- as.factor(t$mhc_class)
 
+# Coincidence interval
+coincidence_filename <- "~/GitHubs/bbbq_1_smart/table_coincidence.csv"
+testthat::expect_true(file.exists(coincidence_filename))
+t_coincidence_all <- readr::read_csv(
+  coincidence_filename,
+  show_col_types = FALSE
+)
+t_coincidence <- t_coincidence_all %>% 
+  dplyr::filter(target == "human") %>%
+  dplyr::select(mhc_class, conf_99_low, f_tmh, conf_99_high)
+
 p <- ggplot2::ggplot(t, 
   ggplot2::aes(x = mhc_class, y = f_tmh)) +
   ggplot2::geom_col(fill = "#BBBBBB") +
+  ggplot2::geom_errorbar(data = t_coincidence, ggplot2::aes(x = mhc_class, ymin = conf_99_low, ymax = conf_99_high), col = "red") +
   ggplot2::scale_y_continuous(
     "Epitopes derived from TMH",
     labels = scales::percent,

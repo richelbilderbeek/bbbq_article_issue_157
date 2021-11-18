@@ -10,6 +10,7 @@ testthat::expect_true(file.exists(prediction_results_1_filename))
 prediction_results_2_filename <- "~/GitHubs/bbbq_1_smart/table_tmh_binders_mhc2_2.csv"
 testthat::expect_true(file.exists(prediction_results_2_filename))
 
+# Coincidence interval
 coincidence_filename <- "~/GitHubs/bbbq_1_smart/table_coincidence.csv"
 testthat::expect_true(file.exists(coincidence_filename))
 
