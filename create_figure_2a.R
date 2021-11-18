@@ -10,6 +10,9 @@ testthat::expect_true(file.exists(prediction_results_1_filename))
 prediction_results_2_filename <- "~/GitHubs/bbbq_1_smart/table_tmh_binders_mhc2_2.csv"
 testthat::expect_true(file.exists(prediction_results_2_filename))
 
+coincidence_filename <- "~/GitHubs/bbbq_1_smart/table_coincidence.csv"
+testthat::expect_true(file.exists(coincidence_filename))
+
 
 t_iedb <- readr::read_csv(
   results_per_allele_filename,
@@ -56,6 +59,14 @@ testthat::expect_equal(
   c("allele_name","f_tmh","n")
 )
 
+t_coincidence_all <- readr::read_csv(
+  coincidence_filename,
+  show_col_types = FALSE
+)
+t_coincidence <- t_coincidence_all %>% 
+  dplyr::filter(target == "human") %>%
+  dplyr::select(mhc_class, conf_99_low, conf_99_high)
+
 # Merge the tibbles
 t_iedb$type <- "observed"
 t_predictions$type <- "predicted"
@@ -69,12 +80,13 @@ ts$mhc_class[stringr::str_detect(ts$allele_name, "HLA-[AB]")] <- "I"
 ts$mhc_class[stringr::str_detect(ts$allele_name, "HLA-D")] <- "II"
 # Only keep MHC-I, as MHC-II has no overlap
 ts <- ts[ts$mhc_class == "I", ]
+
 # ts$allele_name <- bbbq::simplify_haplotype_names(ts$allele_name)
 # Remove unknown alleles
 #ts <- ts[!is.na(ts$allele_name), ]
 #ts$allele_name <- paste0(ts$mhc_class, "_", ts$allele_name)
 # readr::write_lines(x = ts$allele_name, "~/allele_names.txt")
-
+ts
 
 p <- ggplot2::ggplot(ts, 
   ggplot2::aes(x = allele_name, y = f_tmh, fill = type)) +
@@ -101,6 +113,8 @@ p <- ggplot2::ggplot(ts,
   #     )
   #   )
   # ) + 
+  ggplot2::geom_hline(color = "red", yintercept = (t_coincidence %>% filter(mhc_class == "I"))$conf_99_low) +
+  ggplot2::geom_hline(color = "red", yintercept = (t_coincidence %>% filter(mhc_class == "I"))$conf_99_high) +
   bbbq::get_bbbq_theme() +
   ggplot2::theme(text = ggplot2::element_text(size = 24)) +
   ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90))
