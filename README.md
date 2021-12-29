@@ -5,6 +5,8 @@ Branch   |[![GitHub Actions logo](pics/GitHubActions.png)](https://github.com/ri
 `master` |![R-CMD-check](https://github.com/richelbilderbeek/bbbq_article_issue_157/workflows/R-CMD-check/badge.svg?branch=master)   
 `develop`|![R-CMD-check](https://github.com/richelbilderbeek/bbbq_article_issue_157/workflows/R-CMD-check/badge.svg?branch=develop)  
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5809109.svg)](https://doi.org/10.5281/zenodo.5809109)
+
 BBBQ article Issue 157.
 
 ![Result of BBBQ article Issue 157](results.png)
