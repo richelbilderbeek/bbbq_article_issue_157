@@ -49,5 +49,3 @@ iedb_t_cell_epitopes_and_allele.csv    |table with `linear_sequence` and `mhc_al
  * [results/tmhs_tmhmm.csv](results/tmhs_tmhmm_1.csv)
  * [results/tmhs_pureseqtm.csv](results/tmhs_pureseqtm_2.csv)
  * [results/tmhs_tmhmm.csv](results/tmhs_tmhmm_2.csv)
-
-
