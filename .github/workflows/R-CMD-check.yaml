@@ -10,7 +10,7 @@ name: R-CMD-check
 
 jobs:
   R-CMD-check:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
@@ -24,60 +24,23 @@ jobs:
       - name: Install libcurl4-openssl-dev
         run: sudo apt install -qq libcurl4-openssl-dev
 
-      - name: Install remotes package
-        run: install.packages("remotes")
-        shell: Rscript {0}
-
-      - name: Install R.utils
-        run: install.packages(c("R.utils", "readxl"))
-        shell: Rscript {0}
 
       - name: Install dependencies
-        run: remotes::install_github("richelbilderbeek/bianchi_et_al_2017")
-        shell: Rscript {0}
-
-      - name: Install mhcnpreds
-        run: remotes::install_github("jtextor/epitope-prediction")
-        shell: Rscript {0}
-
-      - name: Install mhcnpreds
-        run: remotes::install_github("richelbilderbeek/epiprepreds")
-        shell: Rscript {0}
-
-      - name: Install R.utils
-        run: install.packages(c("R.utils", "readxl"))
-        shell: Rscript {0}
-
-      - name: Install nmhc2ppreds
-        run: remotes::install_github("richelbilderbeek/nmhc2ppreds")
-        shell: Rscript {0}
-
-      - name: Install mhcnpreds
-        run: remotes::install_github("richelbilderbeek/mhcnpreds")
-        shell: Rscript {0}
-
-      - name: Install iedbr
-        run: remotes::install_github("richelbilderbeek/iedbr")
-        shell: Rscript {0}
-
-      - name: Install Biostrings
-        run: remotes::install_bioc("Biostrings")
-        shell: Rscript {0}
-
-      - name: Install msa
-        run: remotes::install_bioc("msa")
-        shell: Rscript {0}
-          
-      - name: Install bbbq
-        run: remotes::install_github("richelbilderbeek/bbbq")
-        shell: Rscript {0}
-
-      - name: Install pureseqtmr
-        run: remotes::install_github("richelbilderbeek/pureseqtmr")
-        shell: Rscript {0}
-
-      - name: Install tmhmm
-        run: remotes::install_github("richelbilderbeek/tmhmm")
+        run: |
+          install.packages(c("remotes", "rcmdcheck"))
+          install.packages(c("R.utils", "readxl"))
+          remotes::install_github("richelbilderbeek/bianchi_et_al_2017")
+          remotes::install_deps(dependencies = TRUE)
+          remotes::install_github("jtextor/epitope-prediction")
+          remotes::install_github("richelbilderbeek/epiprepreds")
+          remotes::install_github("richelbilderbeek/nmhc2ppreds")
+          remotes::install_github("richelbilderbeek/mhcnpreds")
+          remotes::install_github("richelbilderbeek/iedbr")
+          remotes::install_bioc("Biostrings")
+          remotes::install_bioc("msa")
+          remotes::install_github("richelbilderbeek/bbbq")
+          remotes::install_github("richelbilderbeek/pureseqtmr")
+          remotes::install_github("richelbilderbeek/tmhmm")
         shell: Rscript {0}
 
       - name: make
