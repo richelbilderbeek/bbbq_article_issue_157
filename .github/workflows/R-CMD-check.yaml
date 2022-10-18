@@ -24,11 +24,12 @@ jobs:
       - name: Install libcurl4-openssl-dev
         run: sudo apt install -qq libcurl4-openssl-dev
 
+      - name: Install libharfbuzz-dev libfribidi-dev
+        run: sudo apt install -qq libharfbuzz-dev libfribidi-dev
 
       - name: Install dependencies
         run: |
-          install.packages(c("remotes", "rcmdcheck"))
-          install.packages(c("R.utils", "readxl"))
+          install.packages(c("remotes", "rcmdcheck", "R.utils", "readxl"))
           remotes::install_github("richelbilderbeek/bianchi_et_al_2017")
           remotes::install_deps(dependencies = TRUE)
           remotes::install_github("jtextor/epitope-prediction")
